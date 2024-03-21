@@ -21,25 +21,46 @@ require_once(__DIR__ . '/../db/database.php');
 <?php
 /** 
  * create an obj of Database class to access its members
- *  and store it into varaiable $db 
+ * and store it into variable $db 
  */
 $db = new Database();
 
-/** 
- * write query that we want to execute here we write select query 
- */
-$query = 'SELECT * FROM user';
+if (isset($_POST['submit'])) {
+  $username = mysqli_real_escape_string($db->connection, $_POST['username']);
+  $pass = mysqli_real_escape_string($db->connection, $_POST['password']);
+  $role = mysqli_real_escape_string($db->connection, $_POST['role']);
 
-/** 
- * call read() method to execute query and stores the result into var
- */
-$read = $db->read($query);
-//echo "<h3> $read </h3>";
+  //echo $username . "  " . $pass . "   " . $role;
+
+  /** 
+   * writing insert query that we want to execute 
+   */
+
+  /** 
+   * If we write put values without quote '' inside query 
+   * then it will show following error
+   * Fatal error: Uncaught mysqli_sql_exception: 
+   * Unknown column 'first_column_value' in 'field list' 
+   *** 
+   * $insertQuery = "INSERT INTO user(username, password, role) 
+   * VALUES($username, $pass, $role)"; 
+   */
+
+  $insertQuery = "INSERT INTO user(username, password, role) 
+    VALUES('$username', '$pass', '$role')";
+
+
+  /** 
+   * call insert() method to execute query and stores the result into var
+   */
+  $insertedData = $db->create($insertQuery);
+}
+
 ?>
 
 <?php
-/* if ($read) {
-  while ($row = $read->fetch_assoc()) {
+/* if ($data) {
+  while ($row = $data->fetch_assoc()) {
     echo $row['id'];
     echo $row['username'];
     echo $row['password'];
@@ -53,32 +74,39 @@ $read = $db->read($query);
   write some html code to show table 
 -->
 <section>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Username</th>
-        <th scope="col">Password</th>
-        <th scope="col">Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      if ($read) {
-        while ($row = $read->fetch_assoc()) {
-      ?>
-          <tr>
-            <th> <?php echo $row['id']; ?> </th>
-            <td> <?php echo $row['username']; ?> </td>
-            <td> <?php echo $row['password']; ?> </td>
-            <td> <?php echo $row['role']; ?> </td>
-          </tr>
-      <?php
-        }
-      }
-      ?>
-    </tbody>
-  </table>
+  <form action="" method="post">
+    <div class="row align-items-center mb-4">
+      <div class="col-auto">
+        <label for="username" class="col-form-label">Username</label>
+      </div>
+      <div class="col-auto">
+        <input type="text" name="username" class="form-control-lg" placeholder="name/email">
+      </div>
+      <!-- <div class="col-auto">
+        <span name="usernameHelpInline" class="form-text">
+          name/email.
+        </span>
+      </div> -->
+    </div>
+    <div class="row align-items-center mb-4">
+      <div class="col-auto">
+        <label for="password" class="col-form-label">Password</label>
+      </div>
+      <div class="col-auto">
+        <input type="text" name="password" class="form-control-lg" placeholder="8 or more characters">
+      </div>
+    </div>
+    <div class="row align-items-center mb-4">
+      <div class="col-auto">
+        <label for="role" class="col-form-label">Role</label>
+      </div>
+      <div class="col-auto">
+        <input type="text" name="role" class="form-control-lg">
+      </div>
+    </div>
+    <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+    <input type="submit" class="btn btn-primary" name="submit" value="submit" />
+  </form>
 </section>
 
 <?php

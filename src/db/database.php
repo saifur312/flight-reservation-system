@@ -1,6 +1,7 @@
 <?php
 
-class Database {
+class Database
+{
   /**
    * declare and initialize fields with the value of 
    * global variables written in config.php file
@@ -14,56 +15,72 @@ class Database {
   public $error;
 
   //constructor
-  public function __construct(){
-   /** 
-    * call connectDB method so that it is called each of this 
-    *  object creation and creates connection with database
-    */
-   $this->connectDB();
-
+  public function __construct()
+  {
+    /** 
+     * call connectDB method so that it is called each of this 
+     *  object creation and creates connection with database
+     */
+    $this->connectDB();
   }
 
   /** 
    * this method is responsible to create connection with database
    * */
-  private function connectDB(){
+  private function connectDB()
+  {
     /**
      * create a new instance/obj of mysqli class to access MYSQL database
      * and store it into connection property of $this class 
      */
     $this->connection = new mysqli(
-      $this->host, 
-      $this->user, 
-      $this->pass, 
+      $this->host,
+      $this->user,
+      $this->pass,
       $this->dbname
     );
-      
+
     /* 
      * if connection fails then show error msg and return false
      * if not then show success msg
      */
-    if(!$this->connection){
-      $this->error = "Connection Fail...!!".$this->connection->connect_error;
+    if (!$this->connection) {
+      $this->error = "Connection Fail...!!" . $this->connection->connect_error;
       return false;
-    }else
+    } else
       echo "<h1 style='color:green'> DB connection successful..!! </h1>";
   }
 
-  public function read($query){
+  public function read($sqlQuery)
+  {
     /** 
-     * execute query that is passed as arguments 
+     * execute passed in select query using mysql query() method
      */
-    $result = $this->connection->query($query) or 
-      die($this->connection->error.__LINE__);
+    $result = $this->connection->query($sqlQuery) or
+      die($this->connection->error . __LINE__);
     /**
      * if query execution succeeded then return results/data as associative array
      * or if no data found then return false 
      */
-    if($result->num_rows > 0 )
+    if ($result->num_rows > 0)
       return $result;
     else
       return false;
-      //return [];
-      //return array();
+    //return [];
+    //return array();
+  }
+
+  public function create($sqlQuery)
+  {
+    /** 
+     * execute passed in insert query using mysql query() method  
+     */
+    $insertedData = $this->connection->query($sqlQuery) or
+      die($this->connection->error . __LINE__);
+    /**
+     * 
+     */
+    if ($insertedData)
+      echo "<h3 style='color:blue'> Data Stored successful</h3>";
   }
 }
