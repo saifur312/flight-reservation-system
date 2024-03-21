@@ -47,8 +47,9 @@ class Database
     if (!$this->connection) {
       $this->error = "Connection Fail...!!" . $this->connection->connect_error;
       return false;
-    } else
-      echo "<h1 style='color:green'> DB connection successful..!! </h1>";
+    }
+    // else
+    //   echo "<h1 style='color:green'> DB connection successful..!! </h1>";
   }
 
   public function read($sqlQuery)
@@ -82,5 +83,7 @@ class Database
      */
     if ($insertedData)
       echo "<h3 style='color:blue'> Data Stored successful</h3>";
+    else
+      die("Error...(" . $this->connection->errno . ")" . $this->connection->error);
   }
 }
