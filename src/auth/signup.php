@@ -10,8 +10,6 @@ include "./../inc/header.php";
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/../db/database.php');
 
-//require_once(__DIR__ . '/../libs/bootstrap-5.3.3-dist/bootstrap.css');
-
 ?>
 
 
@@ -93,6 +91,7 @@ if (isset($_POST['submit'])) {
       </div>
       <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
       <input type="submit" class="btn btn-lg btn-primary" name="submit" value="submit" />
+      <input type="reset" class="btn btn-lg btn-danger" value="Cancel" />
     </form>
   </div>
 </section>

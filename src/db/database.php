@@ -52,7 +52,7 @@ class Database
     //   echo "<h1 style='color:green'> DB connection successful..!! </h1>";
   }
 
-  public function read($sqlQuery)
+  public function select($sqlQuery)
   {
     /** 
      * execute passed in select query using mysql query() method
@@ -63,9 +63,10 @@ class Database
      * if query execution succeeded then return results/data as associative array
      * or if no data found then return false 
      */
-    if ($result->num_rows > 0)
+    if ($result->num_rows > 0) {
+      //echo $result['username'];
       return $result;
-    else
+    } else
       return false;
     //return [];
     //return array();
@@ -79,11 +80,44 @@ class Database
     $insertedData = $this->connection->query($sqlQuery) or
       die($this->connection->error . __LINE__);
     /**
-     * 
+     * show success or error msg 
      */
     if ($insertedData)
-      echo "<h3 style='color:blue'> Data Stored successful</h3>";
+      echo "<h3 style='color:green'> Data Stored successful</h3>";
     else
       die("Error...(" . $this->connection->errno . ")" . $this->connection->error);
+  }
+
+  public function update($sqlQuery)
+  {
+    /** 
+     * execute passed in update query using mysql query() method  
+     */
+    $updatedData = $this->connection->query($sqlQuery) or
+      die($this->connection->error . __LINE__);
+    /**
+     * show success or error msg 
+     */
+    if ($updatedData)
+      echo "<h3 style='color:green'> Data updated successful</h3>";
+    else
+      die("<p style='color:red'>Error...(" . $this->connection->errno . ")</p>" . $this->connection->error);
+  }
+
+
+  public function delete($sqlQuery)
+  {
+    /** 
+     * execute passed in update query using mysql query() method  
+     */
+    $deletedData = $this->connection->query($sqlQuery) or
+      die($this->connection->error . __LINE__);
+    /**
+     * show success or error msg 
+     */
+    if ($deletedData)
+      echo "<h3 style='color:green'> Data deleted successful</h3>";
+    else
+      die("<p style='color:red'>Error...(" . $this->connection->errno . ")</p>" . $this->connection->error);
   }
 }

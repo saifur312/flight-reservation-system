@@ -12,8 +12,6 @@ require(__DIR__ . '/../inc/header.php');
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/../db/database.php');
 
-//require_once(__DIR__ . '/../libs/bootstrap-5.3.3-dist/bootstrap.css');
-
 ?>
 
 
@@ -33,7 +31,7 @@ $query = 'SELECT * FROM user';
 /** 
  * call read() method to execute query and stores the result into var
  */
-$data = $db->read($query);
+$data = $db->select($query);
 //echo "<h3> $data </h3>";
 ?>
 
@@ -61,7 +59,7 @@ $data = $db->read($query);
         <th scope="col">Username</th>
         <th scope="col">Password</th>
         <th scope="col">Role</th>
-        <th scope="col">Action</th>
+        <th scope="col" colspan="2">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -84,7 +82,10 @@ $data = $db->read($query);
             <td> <?php echo $row['username']; ?> </td>
             <td> <?php echo $row['password']; ?> </td>
             <td> <?php echo $row['role']; ?> </td>
-            <td> <a href="update.php?id=<?php echo $row['id']; ?>"> Edit</td>
+            <td> <a href="update.php?id=<?php echo urlencode($row['id']); ?>">
+                Edit</td>
+            <td> <a href="update.php?id=<?php echo urlencode($row['id']); ?>">
+                Delete</td>
           </tr>
       <?php
           $count++;
@@ -98,12 +99,3 @@ $data = $db->read($query);
 <?php
 require(__DIR__ . '/../inc/footer.php');
 ?>
-
-
-
-<!-- root 
- -public 
- -src 
-   -auth 
-     -signup.php
- -config.php -->
