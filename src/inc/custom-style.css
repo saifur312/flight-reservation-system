@@ -1,8 +1,18 @@
 .navbar {
-  background-color: #f7fbfc;
-  color: #ffffff;
+  background-color: #eaf6f9;
+  /* vertical-align: center;
+  color: #ffffff; */
 }
 
 body {
+  background-color: #f7fbfc;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.logo {
+  height: 100px;
+  width: 200px;
+}
+.logo-brand {
+  height: 25px;
 }

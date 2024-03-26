@@ -1,4 +1,5 @@
 <?php
+
 /** 
  * define some constants to hold credentials and configuration 
  * necessary to connect to the MySQL database.
@@ -8,3 +9,6 @@ define("DB_HOST", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "");
 define("DB_NAME", "flightciu");
+define("ROOT_URL", "http://localhost/flight-reservation-system/src/");
+define("ROOT_PATH", "");
+// $rootpath = 

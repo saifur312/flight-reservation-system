@@ -12,6 +12,9 @@ require(__DIR__ . '/../inc/header.php');
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/../db/database.php');
 
+/* show content iff the user is logged in only */
+Session::checkSession();
+
 ?>
 
 
