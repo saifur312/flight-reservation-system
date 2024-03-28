@@ -59,11 +59,17 @@ $root_url = ROOT_URL;
                 <a class="nav-link" href="{$root_url}auth/users.php">users</a>
               </li> 
               <li class="nav-item">
-                <a class="nav-link" href="{$root_url}setup/airport/add-airport.php">airport</a>
+                <a class="nav-link" href="{$root_url}setup/airport/airports.php">airport</a>
               </li> 
               <li class="nav-item">
-                <a class="nav-link" href="{$root_url}setup/airline/add-airline.php">airline</a>
+                <a class="nav-link" href="{$root_url}setup/airline/airlines.php">airline</a>
               </li> 
+              <li class="nav-item">
+                <a class="nav-link" href="{$root_url}setup/flight/flights.php">Flights</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{$root_url}setup/ticket/tickets.php">Tickets</a>
+              </li>
             HTML;
           }
           ?>

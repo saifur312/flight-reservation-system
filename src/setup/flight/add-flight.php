@@ -1,11 +1,7 @@
 <?php
 include "../../inc/header.php";
-include '../../service/Airport.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-  //print_r($_POST);
-  $airport =  new Airport();
-  $airport->saveAirport($_POST);
+if (isset($_POST['submit'])) {
 }
 
 ?>
@@ -19,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             <label for="name" class="col-form-label">Name</label>
           </div>
           <div class="col-8">
-            <input type="text" id="name" name="name" class="form-control-lg" placeholder="Chittagong Int. Airport" required inputmode="text">
+            <input type="text" name="name" class="form-control-lg" placeholder="Chittagong Int. Airport" inputmode="text">
           </div>
         </div>
         <div class="row align-items-center mb-4">
@@ -27,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             <label for="code" class="col-form-label">Code</label>
           </div>
           <div class="col-8">
-            <input type="text" name="code" class="form-control-lg" placeholder="CHI" required inputmode="text">
+            <input type="text" name="code" class="form-control-lg" placeholder="CHI">
           </div>
         </div>
         <div class="row align-items-center mb-4">
@@ -35,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             <label for="country" class="col-form-label">Country</label>
           </div>
           <div class="col-8">
-            <input type="text" name="country" class="form-control-lg" placeholder="Bangladesh" required inputmode="text">
+            <input type="text" name="country" class="form-control-lg" placeholder="Bangladesh">
           </div>
         </div>
         <div class="row align-items-center mb-4">
@@ -43,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             <label for="city" class="col-form-label">City</label>
           </div>
           <div class="col-8">
-            <input type="text" name="city" class="form-control-lg" placeholder="Chittagong" required inputmode="text">
+            <input type="text" name="city" class="form-control-lg" placeholder="Chittagong">
           </div>
         </div>
         <div class="row align-items-center mb-4">
@@ -51,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             <label for="contact" class="col-form-label">Help Line</label>
           </div>
           <div class="col-8">
-            <input type="text" name="contact" class="form-control-lg" placeholder="+880146774" required inputmode="text">
+            <input type="text" name="contact" class="form-control-lg" placeholder="+880146774">
           </div>
         </div>
         <!-- <button type="submit" class="btn btn-primary">Submit</button> -->

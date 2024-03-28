@@ -82,9 +82,10 @@ class Database
     /**
      * show success or error msg 
      */
-    if ($insertedData)
-      echo "<h3 style='color:green'> Data Stored successful</h3>";
-    else
+    if ($insertedData) {
+      return $insertedData;
+      //echo "<h3 style='color:green'> Data Stored successful</h3>";
+    } else
       die("Error...(" . $this->connection->errno . ")" . $this->connection->error);
   }
 
@@ -98,9 +99,10 @@ class Database
     /**
      * show success or error msg 
      */
-    if ($updatedData)
-      echo "<h3 style='color:green'> Data updated successful</h3>";
-    else
+    if ($updatedData) {
+      return $updatedData;
+      //echo "<h3 style='color:green'> Data updated successful</h3>";
+    } else
       die("<p style='color:red'>Error...(" . $this->connection->errno . ")</p>" . $this->connection->error);
   }
 

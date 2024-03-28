@@ -1,6 +1,6 @@
 <?php
 include "./../inc/header.php";
-require_once(__DIR__ . '/../../config.php');
+//require_once(__DIR__ . '/../../config.php');
 //require_once(__DIR__ . '/../db/database.php');
 include "../service/User.php";
 
