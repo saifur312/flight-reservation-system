@@ -27,8 +27,11 @@ $root_url = ROOT_URL;
 
   <!-- Bootstrap css  -->
   <link rel="stylesheet" href="<?php echo ROOT_URL; ?>libs/bootstrap-5.3.3-dist/css/bootstrap.css">
+  <!-- select2 css -->
+  <link href="<?php echo ROOT_URL; ?>libs/select2/select2.min.css" rel="stylesheet" />
   <!-- our customized style -->
   <link rel="stylesheet" href="<?php echo ROOT_URL; ?>inc/custom-style.css">
+
 
 </head>
 
@@ -54,6 +57,12 @@ $root_url = ROOT_URL;
             echo <<<HTML
               <li class="nav-item">
                 <a class="nav-link" href="{$root_url}auth/users.php">users</a>
+              </li> 
+              <li class="nav-item">
+                <a class="nav-link" href="{$root_url}setup/airport/add-airport.php">airport</a>
+              </li> 
+              <li class="nav-item">
+                <a class="nav-link" href="{$root_url}setup/airline/add-airline.php">airline</a>
               </li> 
             HTML;
           }

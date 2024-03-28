@@ -35,22 +35,22 @@ class Session
     exit();
   }
 
-  // public static function checkSession()
-  // {
-  //   if (self::get('login') == true) {
-  //     header("Location: " . ROOT_URL . "index.php");
-  //   } else {
-  //     self::destroy();
-  //     header("Location: " . ROOT_URL . "auth/login.php");
-  //   }
-  // }
-
   public static function checkSession()
   {
-    if (!self::get('login')) {
+    if (self::get('login')) {
+      header("Location: " . ROOT_URL . "index.php");
+    } else {
       self::destroy();
-      // header("Location: " . ROOT_URL . "auth/login.php");
-      // exit();
+      header("Location: " . ROOT_URL . "auth/login.php");
     }
   }
+
+  // public static function checkSession()
+  // {
+  //   if (!self::get('login')) {
+  //     self::destroy();
+  //     // header("Location: " . ROOT_URL . "auth/login.php");
+  //     // exit();
+  //   }
+  // }
 }
