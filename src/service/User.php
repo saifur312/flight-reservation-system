@@ -42,6 +42,7 @@ class User
       $userData = $userData->fetch_assoc();
       return $userData;
     } else {
+
       return false;
     }
   }

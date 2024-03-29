@@ -41,9 +41,9 @@ $airports = $airport->fetchAirports();
             <td> <?php echo $airport['country']; ?> </td>
             <td> <?php echo $airport['city']; ?> </td>
             <td> <?php echo $airport['contact']; ?> </td>
-            <td> <a href="update-airport?id=<?php echo urlencode($airport['id']); ?>">
+            <td> <a href="update-airport.php?id=<?php echo urlencode($airport['id']); ?>">
                 Edit</td>
-            <td> <a href="update-airport?id=<?php echo urlencode($airport['id']); ?>">
+            <td> <a href="update-airport.php?id=<?php echo urlencode($airport['id']); ?>">
                 Delete</td>
           </tr>
       <?php

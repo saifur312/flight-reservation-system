@@ -1,8 +1,7 @@
 <?php
 include __DIR__ . "/../db/database.php";
-//include "../setup/airport/airports.php";
 
-class Airport
+class Airline
 {
   private $db;
 
@@ -11,28 +10,24 @@ class Airport
     $this->db = new Database();
   }
 
-
-
-  public function saveAirport($formData)
+  public function saveAirline($formData)
   {
     // print_r('Data submit success ');
     // print_r($formData);
 
     $name = $formData['name'];
-    $code = $formData['code'];
-    $country = $formData['country'];
-    $city = $formData['city'];
+    $seats = $formData['seats'];
     $contact = $formData['contact'];
 
-    $insertQuery = "INSERT into airport(name, code, country, city, contact) values ('$name', '$code', '$country', '$city', '$contact')";
+    $insertQuery = "INSERT into airline(name, seats, contact) values ('$name', '$seats', '$contact')";
 
     $savedData = $this->db->create($insertQuery);
 
     if ($savedData) {
-      header("refresh:2; url=airports.php");
+      header("refresh:2; url=airlines.php");
       echo "
       <div class='alert alert-success alert-dismissible fade show' role='alert'> 
-        Airport saved successfully..!! 
+        Airline saved successfully..!! 
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
@@ -40,60 +35,56 @@ class Airport
     } else {
       echo "
       <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
-        Fail to save airport...!! Plz fill up all fields carefully.
+        Fail to save airline...!! Plz fill up all fields carefully.
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
     }
   }
 
-  public function fetchAirports()
+  public function fetchAirlines()
   {
-    $selectQuery = "select * from airport";
-    $airports = $this->db->select($selectQuery);
-    if ($airports)
-      return $airports;
+    $selectQuery = "select * from airline";
+    $airlines = $this->db->select($selectQuery);
+    if ($airlines)
+      return $airlines;
     else
       return array(); //return empty array
   }
 
-  public function fetchAirport($id)
+  public function fetchAirline($id)
   {
-    $selectQuery = "select * from airport where id=$id";
-    $airport = $this->db->select($selectQuery)->fetch_assoc();
-    if ($airport)
-      return $airport;
+    $selectQuery = "select * from airline where id=$id";
+    $airline = $this->db->select($selectQuery)->fetch_assoc();
+    if ($airline)
+      return $airline;
     else
       return null;
   }
 
-  public function updateAirport($formData)
+  public function updateAirline($formData)
   {
     // print_r('Data submit success ');
     //print_r($formData);
     $id = $formData['id'];
     $name = $formData['name'];
-    $code = $formData['code'];
-    $country = $formData['country'];
-    $city = $formData['city'];
+    $seats = $formData['seats'];
     $contact = $formData['contact'];
 
-    $updateQuery = "UPDATE airport SET 
+    $updateQuery = "UPDATE airline SET 
       name = '$name', 
-      code = '$code', 
-      country = '$country', 
-      city = '$city', 
+      seats = '$seats', 
       contact = '$contact'
       WHERE id = $id";
 
     $updatedData = $this->db->create($updateQuery);
 
     if ($updatedData) {
-      //header("Location: airports.php");
-      header("refresh:2; url=airports.php");
+      //header("Location: airlines.php");
+      header("refresh:2; url=airlines.php");
       echo "
       <div class='alert alert-success alert-dismissible fade show' role='alert'> 
-        Airport updated successfully..!! 
+        Airline updated successfully..!! 
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
@@ -101,24 +92,24 @@ class Airport
     } else {
       echo "
       <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
-        Fail to update airport...!! Plz fill up all fields carefully.
+        Fail to update airline...!! Plz fill up all fields carefully.
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
     }
   }
 
-  public function deleteAirport($id)
+  public function deleteAirline($id)
   {
-    $deleteQuery = "DELETE FROM airport where id= $id";
+    $deleteQuery = "DELETE FROM airline where id= $id";
 
     $this->db->delete($deleteQuery);
 
-    //header("Location: airports.php");
-    header("refresh:2; url=airports.php");
+    //header("Location: airlines.php");
+    header("refresh:2; url=airlines.php");
     echo "
       <div class='alert alert-success alert-dismissible fade show' role='alert'> 
-        Airport deleted successfully..!! 
+        Airline deleted successfully..!! 
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";

@@ -118,7 +118,7 @@ class Database
      * show success or error msg 
      */
     if ($deletedData)
-      echo "<h3 style='color:green'> Data deleted successful</h3>";
+      return;
     else
       die("<p style='color:red'>Error...(" . $this->connection->errno . ")</p>" . $this->connection->error);
   }
