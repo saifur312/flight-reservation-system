@@ -4,7 +4,7 @@ include '../../service/Airline.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
   //print_r($_POST);
-  $airline =  new Airline();
+  $airline = new Airline();
   $airline->saveAirline($_POST);
 }
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
             <label for="seats" class="col-form-label">No. of Seats</label>
           </div>
           <div class="col-8">
-            <input type="text" name="code" class="form-control-lg" placeholder="200" required inputmode="text">
+            <input type="text" name="seats" class="form-control-lg" placeholder="200" required inputmode="text">
           </div>
         </div>
         <div class="row align-items-center mb-4">

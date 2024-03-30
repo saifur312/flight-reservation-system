@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . "/../db/database.php";
+include_once __DIR__ . "/../db/database.php";
 //include "../setup/airport/airports.php";
 
 class Airport

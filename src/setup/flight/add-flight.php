@@ -1,8 +1,29 @@
 <?php
 include "../../inc/header.php";
+include "../../service/Airport.php";
+include "../../service/Airline.php";
+include "../../service/Flight.php";
 
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
+  $flight = new Flight();
+  $flight->saveFlight($_POST);
+
+
+  // $flight->filterFlights(
+  //   $formData['source'],
+  //   $formData['destination'],
+  //   $formData['departure'],
+  //   $formData['arrival']
+  // );
+
+
 }
+
+$ap = new Airport();
+$airports = $ap->fetchAirports();
+
+$al = new Airline();
+$airlines = $al->fetchAirlines();
 
 ?>
 
@@ -10,44 +31,98 @@ if (isset($_POST['submit'])) {
   <div class="row justify-content-center ">
     <div class="col-6 card mt-4">
       <form action="" method="post" class="mt-4 card-body">
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="name" class="col-form-label">Name</label>
+
+        <div class="row justify-content-center mb-4">
+          <div class="col-4 text-start">
+            <label for="source" class="col-form-label">Departure Airport </label>
           </div>
-          <div class="col-8">
-            <input type="text" name="name" class="form-control-lg" placeholder="Chittagong Int. Airport" inputmode="text">
-          </div>
-        </div>
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="code" class="col-form-label">Code</label>
-          </div>
-          <div class="col-8">
-            <input type="text" name="code" class="form-control-lg" placeholder="CHI">
-          </div>
-        </div>
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="country" class="col-form-label">Country</label>
-          </div>
-          <div class="col-8">
-            <input type="text" name="country" class="form-control-lg" placeholder="Bangladesh">
-          </div>
-        </div>
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="city" class="col-form-label">City</label>
-          </div>
-          <div class="col-8">
-            <input type="text" name="city" class="form-control-lg" placeholder="Chittagong">
+          <div class="col-8 text-start">
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="source" required>
+              <option>Select One</option>
+              <?php
+              if ($airports) {
+                while ($airport = $airports->fetch_assoc()) {
+                  echo <<<HTML
+                    <option value="{$airport['name']}">{$airport['name']}
+                      &nbsp; ({$airport['code']})</option>
+                  HTML;
+                }
+                // Reset internal pointer of result set
+                $airports->data_seek(0);
+              }
+              ?>
+            </select>
           </div>
         </div>
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="contact" class="col-form-label">Help Line</label>
+
+        <div class="row justify-content-center mb-4">
+          <div class="col-4 text-start">
+            <label for="destination" class="col-form-label">Arrival Airport</label>
           </div>
-          <div class="col-8">
-            <input type="text" name="contact" class="form-control-lg" placeholder="+880146774">
+          <div class="col-8 text-start">
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="destination" required>
+              <option>Select One</option>
+              <?php
+              if ($airports) {
+                while ($airport = $airports->fetch_assoc()) {
+                  echo <<<HTML
+                    <option value="{$airport['name']}">{$airport['name']}
+                      &nbsp; ({$airport['code']})</option>
+                  HTML;
+                }
+              }
+              ?>
+            </select>
+          </div>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+          <div class="col-4 text-start">
+            <label for="departure" class="col-form-label">Departure</label>
+          </div>
+          <div class="col-8 text-start">
+            <input type="datetime-local" name="departure" class="form-control-lg" min="29/03/2024" max="10/04/2024">
+          </div>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+          <div class="col-4 text-start">
+            <label for="arrival" class="col-form-label">Arrival</label>
+          </div>
+          <div class="col-8 text-start">
+            <input type="datetime-local" name="arrival" class="form-control-lg" min="29/03/2024" max="10/04/2024">
+          </div>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+          <div class="col-4 text-start">
+            <label for="airline" class="col-form-label">Airline </label>
+          </div>
+          <div class="col-8 text-start">
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="airline" required>
+              <option>Select One</option>
+              <?php
+              if ($airlines) {
+                while ($airline = $airlines->fetch_assoc()) {
+                  echo <<<HTML
+                    <option value="{$airline['name']}">{$airline['name']}</option>
+                  HTML;
+                }
+                // Reset internal pointer of result set
+                //$airline->data_seek(0);
+              }
+              ?>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="row justify-content-center mb-4">
+          <div class="col-4 text-start">
+            <label for="price" class="col-form-label">Price</label>
+          </div>
+          <div class="col-8 text-start">
+            <input type="number" name="price" class="form-control-lg">
           </div>
         </div>
         <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
