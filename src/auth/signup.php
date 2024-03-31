@@ -64,35 +64,101 @@ if (isset($_POST['submit'])) {
 -->
 <section class="container text-center">
   <div class="row justify-content-center ">
-    <div class="col-6 card mt-4">
-      <form action="" method="post" class="mt-4 card-body">
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="username" class="col-form-label">Username</label>
+    <div class="card mt-4">
+      <form action="" method="post" class="mt-4 card-body row">
+
+        <div class="col-lg-6 " style="border-right: solid thin black">
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="username" class="col-form-label">Username</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="username" class="form-control-lg" placeholder="name/email" inputmode="text">
+            </div>
           </div>
-          <div class="col-8">
-            <input type="text" name="username" class="form-control-lg" placeholder="name/email" inputmode="text">
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="username" class="col-form-label">Email</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="username" class="form-control-lg" placeholder="name/email" inputmode="text">
+            </div>
           </div>
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="password" class="col-form-label">Password</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="password" class="form-control-lg" placeholder="8 or more characters">
+            </div>
+          </div>
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="password" class="col-form-label">Confirm Password</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="password" class="form-control-lg" placeholder="8 or more characters">
+            </div>
+          </div>
+
         </div>
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="password" class="col-form-label">Password</label>
+
+        <div class="col-lg-6">
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="username" class="col-form-label">First Name</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="username" class="form-control-lg" placeholder="name/email" inputmode="text">
+            </div>
           </div>
-          <div class="col-8">
-            <input type="text" name="password" class="form-control-lg" placeholder="8 or more characters">
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="password" class="col-form-label">Last Name</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="password" class="form-control-lg" placeholder="8 or more characters">
+            </div>
           </div>
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="role" class="col-form-label">Passport</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="role" class="form-control-lg">
+            </div>
+          </div>
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="password" class="col-form-label">Contact</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="password" class="form-control-lg" placeholder="8 or more characters">
+            </div>
+          </div>
+
+          <div class="row align-items-center mb-4">
+            <div class="col-4">
+              <label for="role" class="col-form-label">Address</label>
+            </div>
+            <div class="col-8">
+              <input type="text" name="role" class="form-control-lg">
+            </div>
+          </div>
+
         </div>
-        <div class="row align-items-center mb-4">
-          <div class="col-4">
-            <label for="role" class="col-form-label">Role</label>
-          </div>
-          <div class="col-8">
-            <input type="text" name="role" class="form-control-lg">
-          </div>
+
+        <div class="col-lg-12 mt-4">
+          <input type="submit" class="btn btn-lg btn-outline-primary col-lg-4" name="submit" value="submit" />
+          <input type="reset" class="btn btn-lg btn-outline-danger col-lg-4" value="Cancel" />
         </div>
-        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-        <input type="submit" class="btn btn-lg btn-outline-primary" name="submit" value="submit" />
-        <input type="reset" class="btn btn-lg btn-outline-danger" value="Cancel" />
       </form>
     </div>
   </div>

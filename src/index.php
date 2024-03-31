@@ -193,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
               <td> <?php echo date('Y-m-d h:i A', strtotime($flight['arrival'])); ?> </td>
               <td> <?php echo $flight['price']; ?> </td>
               <td> <?php echo $flight['airline']; ?> </td>
-              <td> <a class="btn btn-success" href="update-flight.php?id=<?php echo urlencode($flight['id']); ?>">
+              <td> <a class="btn btn-success" href="./setup/ticket/buy-ticket.php?id=<?php echo urlencode($flight['id']); ?>">
                   Buy
               </td>
             </tr>

@@ -60,9 +60,9 @@ class Airport
   public function fetchAirport($id)
   {
     $selectQuery = "select * from airport where id=$id";
-    $airport = $this->db->select($selectQuery)->fetch_assoc();
+    $airport = $this->db->select($selectQuery);
     if ($airport)
-      return $airport;
+      return $airport->fetch_assoc();
     else
       return null;
   }

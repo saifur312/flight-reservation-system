@@ -60,7 +60,7 @@ class Flight
   public function fetchFlight($id)
   {
     $selectQuery = "select * from flight where id=$id";
-    $flight = $this->db->select($selectQuery)->fetch_assoc();
+    $flight = $this->db->select($selectQuery);
     if ($flight)
       return $flight;
     else
@@ -84,51 +84,53 @@ class Flight
 
 
     $flights = $this->db->select($selectQuery);
-    //print_r($flights->fetch_assoc());
+    //print_r($flights);
     if ($flights)
       return $flights;
     else
       return false;
   }
 
-  // public function updateFlight($formData)
-  // {
-  //   $id = $formData['id'];
-  //   $name = $formData['name'];
-  //   $code = $formData['code'];
-  //   $country = $formData['country'];
-  //   $city = $formData['city'];
-  //   $contact = $formData['contact'];
+  public function updateFlight($formData)
+  {
+    //print_r($formData);
+    $id = $formData['id'];
+    $source = $formData['source'];
+    $destination = $formData['destination'];
+    $departure = $formData['departure'];
+    $arrival = $formData['arrival'];
+    $airline = $formData['airline'];
+    $price = $formData['price'];
 
-  //   $updateQuery = "UPDATE flight SET 
-  //     name = '$name', 
-  //     code = '$code', 
-  //     country = '$country', 
-  //     city = '$city', 
-  //     contact = '$contact'
-  //     WHERE id = $id";
+    $updateQuery = "UPDATE flight SET 
+      source = '$source', 
+      destination = '$destination', 
+      departure = '$departure', 
+      arrival = '$arrival', 
+      airline = '$airline',
+      price = '$price'
+      WHERE id = $id";
 
-  //   $updatedData = $this->db->create($updateQuery);
+    $updatedData = $this->db->create($updateQuery);
 
-  //   if ($updatedData) {
-  //     //header("Location: flights.php");
-  //     header("refresh:2; url=flights.php");
-  //     echo "
-  //     <div class='alert alert-success alert-dismissible fade show' role='alert'> 
-  //       Flight updated successfully..!! 
-  //       <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
-  //       </button>
-  //     </div>";
-  //     exit();
-  //   } else {
-  //     echo "
-  //     <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
-  //       Fail to update flight...!! Plz fill up all fields carefully.
-  //       <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
-  //       </button>
-  //     </div>";
-  //   }
-  // }
+    if ($updatedData) {
+      header("refresh:2; url=flights.php");
+      echo "
+      <div class='alert alert-success alert-dismissible fade show' role='alert'> 
+        Flight updated successfully..!! 
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+      exit();
+    } else {
+      echo "
+      <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
+        Fail to update flight...!! Plz fill up all fields carefully.
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+    }
+  }
 
   public function deleteFlight($id)
   {

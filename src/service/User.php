@@ -1,5 +1,5 @@
 <?php
-include "../db/database.php";
+include_once __DIR__ . "/../db/database.php";
 class User
 {
   private $db;
@@ -45,5 +45,15 @@ class User
 
       return false;
     }
+  }
+
+  public function fetchUser($id)
+  {
+    $selectQuery = "select * from user where id=$id";
+    $user = $this->db->select($selectQuery)->fetch_assoc();
+    if ($user)
+      return $user;
+    else
+      return null;
   }
 }

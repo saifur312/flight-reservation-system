@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $airportId = $_GET['id'];
+
 $airport = new Airport();
 
 $airportData = $airport->fetchAirport($airportId);
