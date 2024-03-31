@@ -16,11 +16,17 @@ include_once __DIR__ . '../../../config.php';
     $('.js-example-basic-single').select2();
   });
 
-
+  function printDiv() {
+    var printContents = document.getElementById("printSection").innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+  }
 
   // var alertList = document.querySelectorAll('.alert')
   // alertList.forEach(function(alert) {
-  //   new bootstrap.Alert(alert)
+  // new bootstrap.Alert(alert)
   // })
 </script>
 </body>
