@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2024 at 04:58 AM
+-- Generation Time: Mar 31, 2024 at 09:28 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -136,21 +136,27 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(30) NOT NULL,
-  `role` varchar(20) NOT NULL
+  `role` varchar(20) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `passport` varchar(30) NOT NULL,
+  `contact` varchar(20) NOT NULL,
+  `address` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `role`) VALUES
-(1001, 'sana', 'sana123', 'passenger'),
-(1002, 'saifur312', '12345678', 'admin'),
-(1003, 'maan23', '876543', 'passenger'),
-(1004, 'shanto', '12345', 'admin'),
-(1005, 'atanaaa', '123', 'pass..'),
-(1006, 'fara', 'f4566', 'passenger'),
-(1007, 'shimul', '1257', 'passenger.');
+INSERT INTO `user` (`id`, `username`, `password`, `role`, `first_name`, `last_name`, `email`, `passport`, `contact`, `address`) VALUES
+(1001, 'sana', 'sana123', 'passenger', '', '', '', '', '', ''),
+(1002, 'saifur312', '12345678', 'admin', '', '', '', '', '', ''),
+(1003, 'maan23', '876543', 'passenger', '', '', '', '', '', ''),
+(1004, 'shanto', '12345', 'admin', '', '', '', '', '', ''),
+(1005, 'atanaaa', '123', 'pass..', '', '', '', '', '', ''),
+(1006, 'fara', 'f4566', 'passenger', '', '', '', '', '', ''),
+(1007, 'shimul', '1257', 'passenger.', '', '', '', '', '', '');
 
 --
 -- Indexes for dumped tables
