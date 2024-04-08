@@ -2,6 +2,7 @@
 <?php
 include_once __DIR__ . '../../../config.php';
 ?>
+
 <!-- jquery js -->
 <script src="<?php echo ROOT_URL; ?>libs/jquery/jquery-3.7.1.js"></script>
 <!-- Popperjs -->

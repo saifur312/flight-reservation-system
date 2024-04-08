@@ -70,6 +70,9 @@ $root_url = ROOT_URL;
               <li class="nav-item">
                 <a class="nav-link" href="{$root_url}setup/ticket/tickets.php">Tickets</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{$root_url}index2.php">New Page</a>
+              </li>
             HTML;
           }
           ?>
@@ -148,7 +151,9 @@ $root_url = ROOT_URL;
 
 
   <!-- root 
-|--src
+
+
+  |--src
   |--auth
   |--db
   |--inc 

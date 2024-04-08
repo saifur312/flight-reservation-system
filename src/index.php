@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
             <label for="source" class="col-form-label">Departure Airport </label>
           </div>
           <div class="col-8 text-start">
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="source" required>
+            <select class="form-select form-select-lg mb-3 js-example-basic-single" aria-label=".form-select-lg" name="source" required>
               <option>Select One</option>
               <?php
               if ($airports) {
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
             <label for="airline" class="col-form-label">Airline </label>
           </div>
           <div class="col-8 text-start">
-            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="airline" required>
+            <select class="form-select form-select-lg mb-3 js-example-basic-single" aria-label=".form-select-lg" name="airline" required>
               <option>Select One</option>
               <?php
               if ($airlines) {
