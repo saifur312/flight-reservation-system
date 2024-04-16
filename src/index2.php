@@ -21,18 +21,18 @@ $airlines = $al->fetchAirlines();
 
 $showflights = false;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
-  $flight = new Flight();
-  $flights = $flight->filterFlights(
-    $_POST['source'],
-    $_POST['destination'],
-    $_POST['departure'],
-    $_POST['arrival']
-  );
+// if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
+//   $flight = new Flight();
+//   $flights = $flight->filterFlights(
+//     $_POST['source'],
+//     $_POST['destination'],
+//     $_POST['departure'],
+//     $_POST['arrival']
+//   );
 
-  if ($flights)
-    $showflights = true;
-}
+//   if ($flights)
+//     $showflights = true;
+// }
 
 ?>
 
@@ -119,6 +119,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
       max-width: 45px;
       height: auto;
       border-radius: 4%;
+    }
+
+    .spinner-overlay {
+      position: fixed;
+      /* Full-screen overlay */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.7);
+      /* Semi-transparent white background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1050;
+      /* Higher than most elements */
+    }
+
+    /* Blurred background style */
+    .blur-background {
+      filter: blur(5px);
     }
   </style>
 
@@ -231,15 +252,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
             </div>
 
             <div class="col-lg-12 text-center">
-              <input type="submit" class="btn btn-lg btn-warning" name="search" value="search Flights" />
+              <input type="submit" id="search-btn" class="btn btn-lg btn-warning" name="search" value="search Flights" />
             </div>
 
           </form>
         </div>
       </div>
     </div>
+
+    <!-- loader --><!-- The Bootstrap Spinner -->
+    <!-- <div id="loading-spinner" class="spinner-overlay">
+      <div class="spinner-border m-5" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div> -->
+
+    <!-- The Bootstrap Spinner (hidden initially) -->
+    <!-- <div id="loading-spinner" class="spinner-overlay" style="display:none;">
+      <div class="spinner-border text-primary m-5" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div> -->
+
+
   </section>
 
+  <!-- show flights -->
   <div class="container justify-content-center section-center">
     <div class="row ">
 
@@ -313,6 +351,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
     </div>
   </div>
 
+  <!-- hot deals, offers -->
   <div class="additional pt-4 pb-4">
     <div class="container text-start mt-4 deals">
       <h4 style="color: #1C3C6B"> <b> Hot Deals </b> </h4>
@@ -489,9 +528,80 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
   <script src="<?php echo ROOT_URL; ?>libs/select2/select2.min.js"></script>
 
   <script>
+    // $(document).ready(function() {
+    //   $('.select2').select2();
+    // });
+
     $(document).ready(function() {
+
+      // select2
       $('.select2').select2();
+
+      // $('#search-btn').on('click', function() {
+      //   var source = $("[name='source']").val();
+      //   var destination = $("[name='destination']").val();
+      //   var departure = $("[name='departure']").val();
+      //   var arrival = $("[name='arrival']").val();
+
+      //   //alert(source + " " + destination + " " + departure + " " + arrival);
+
+      //   // Redirect after 2 seconds
+      //   // setTimeout(function() {
+      //   //   window.location.href = 'search-flights.php';
+      //   // }, 1000);
+
+
+      //   window.location.href = 'search-flights.php';
+      // });
+
+      $('#search-btn').on('click', function() {
+        event.preventDefault(); // Prevent the form from submitting
+        var source = encodeURIComponent($("[name='source']").val());
+        var destination = encodeURIComponent($("[name='destination']").val());
+        var departure = encodeURIComponent($("[name='departure']").val());
+        var arrival = encodeURIComponent($("[name='arrival']").val());
+
+        // Construct the URL with query parameters
+        var url = 'search-flights.php?source=' + source + '&destination=' + destination +
+          '&departure=' + departure + '&arrival=' + arrival;
+
+        // Redirect to the constructed URL
+        window.location.href = url;
+      });
+
+
+
+      // $('form').on('submit', function() {
+      //   // Show the spinner and blur the page
+      //   $('#loading-spinner').show();
+      // });
+
+
+      // $('form').on('submit', function(event) {
+      //   event.preventDefault(); // Prevent the form from submitting the traditional way
+      //   var formData = $(this).serialize(); // Get the form data
+
+      //   // Show the spinner and blur the page
+      //   $('#loading-spinner').show();
+      //   $('body').addClass('blur-background');
+
+      //   // Send form data with AJAX
+      //   $.post('service/Flight.php', formData, function(response) {
+      //     // This is the callback function that receives the response from your PHP script
+      //     // If the PHP script returns a success message
+      //     if (response.success) {
+      //       // Redirect to search-flights.php
+      //       window.location.href = 'search-flights.php';
+      //     } else {
+      //       // Handle error, hide spinner, etc.
+      //       $('#loading-spinner').hide();
+      //       $('body').removeClass('blur-background');
+      //     }
+      //   }, 'json'); // Expect a JSON response from your PHP script
+      // });
     });
+  </script>
+
   </script>
 </body>
 

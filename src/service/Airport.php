@@ -124,4 +124,17 @@ class Airport
       </div>";
     exit();
   }
+
+  public function getCode($airportName)
+  {
+    $sqlQuery = "SELECT a.code FROM airport a WHERE a.name = '$airportName'";
+    $code = $this->db->connection->query($sqlQuery) or
+      die($this->db->connection->error . __LINE__);
+    if ($code) {
+      $code = $code->fetch_assoc();
+      //print_r($code);
+      //print_r($code['code']);
+      return $code['code'];
+    } else return null;
+  }
 }

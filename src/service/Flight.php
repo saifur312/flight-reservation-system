@@ -67,6 +67,8 @@ class Flight
       return null;
   }
 
+
+
   public function filterFlights($src, $dst, $dep, $ret)
   {
     //echo $src, $dst, $dep, $ret;
@@ -85,9 +87,14 @@ class Flight
 
     $flights = $this->db->select($selectQuery);
     //print_r($flights);
-    if ($flights)
+    if ($flights) {
+      //echo "<script>$('#loading-spinner').show(); </script>";
+      //header("refresh:1; url=search-flights.php");
+      // $queryData = http_build_query(['source' => $src, 'destination' => $dst, 'departure' => $dep, 'return' => $ret]);
+      // header("Location: search-flights.php?$queryData");
+      // exit;
       return $flights;
-    else
+    } else
       return false;
   }
 
