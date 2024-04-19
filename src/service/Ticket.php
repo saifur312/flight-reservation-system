@@ -10,6 +10,16 @@ class Ticket
     $this->db = new Database();
   }
 
+  public function bookTicket($formData)
+  {
+    header("refresh:1; url=payment.php");
+    echo "
+      <div class='alert alert-success alert-dismissible fade show' role='alert'> 
+        Ticket booked successful..!! 
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+  }
 
 
   public function saveTicket($formData)

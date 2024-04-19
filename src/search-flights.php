@@ -268,28 +268,144 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
   <!-- filter-bar -->
   <div class="container filter-bar mt-2">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li>Filters</li>
       <li class="nav-item" role="presentation" style="display:none;">
         <button class="nav-link active" id="empty-tab" data-bs-toggle="tab" data-bs-target="#empty-tab-pane" type="button" role="tab" aria-controls="empty-tab-pane" aria-selected="true"></button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
+        <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Price Range</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Airlines</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Airports</button>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-      <!-- Add a corresponding empty tab-pane for the hidden tab -->
       <div class="tab-pane fade show active" id="empty-tab-pane" role="tabpanel" aria-labelledby="empty-tab" tabindex="0"></div>
-      <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+      <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <div class="row text-start pt-2">
+          <div class="col-lg-3">
+            <div class="col-lg-12">
+              <div>
+                <b> Fare Type </b>
+              </div>
+              <div class="form-check form-switch pt-2">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <label for="customRange2" class="form-label"><b> Price Range </b></label>
+              <input type="range" class="form-range" min="0" max="5" id="customRange2">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="col-lg-12">
+              <div>
+                <b> Airlines </b>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
+                <label class="form-check-label" for="flexCheckDefault1">
+                  Biman Bangladesh Airlines
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                <label class="form-check-label" for="flexCheckDefault2">
+                  US Bangla
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="row text-start pt-2">
+          <div class="col-lg-3">
+            <div class="col-lg-12">
+              <div>
+                <b> Fare Type </b>
+              </div>
+              <div class="form-check form-switch pt-2">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <label for="customRange2" class="form-label"><b> Price Range </b></label>
+              <input type="range" class="form-range" min="0" max="5" id="customRange2">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="col-lg-12">
+              <div>
+                <b> Airlines </b>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
+                <label class="form-check-label" for="flexCheckDefault1">
+                  Biman Bangladesh Airlines
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                <label class="form-check-label" for="flexCheckDefault2">
+                  US Bangla
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+        <div class="row text-start pt-2">
+          <div class="col-lg-3">
+            <div class="col-lg-12">
+              <div>
+                <b> Fare Type </b>
+              </div>
+              <div class="form-check form-switch pt-2">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <label for="customRange2" class="form-label"><b> Price Range </b></label>
+              <input type="range" class="form-range" min="0" max="5" id="customRange2">
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="col-lg-12">
+              <div>
+                <b> Airlines </b>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
+                <label class="form-check-label" for="flexCheckDefault1">
+                  Biman Bangladesh Airlines
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                <label class="form-check-label" for="flexCheckDefault2">
+                  US Bangla
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Flights -->
   <div class="container justify-content-center mt-4">
     <div class="row ">
       <div class="col-lg-9">
@@ -301,7 +417,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
               <div class="col-lg-5"> Fastest</div>
             </div>
           </div>
-
           <!-- show flights -->
           <?php
           if ($showflights) {
@@ -354,7 +469,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
                       </div>
                     </div>
                   </div>
-
+                  <!-- Select Flight -->
                   <div class="col-lg-3">
                     <div class="row justify-content-center">
                       <h5>
@@ -366,9 +481,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
                         ?>
                       </div>
 
-                      <a href="#" class="btn btn-warning col-lg-8">Select</a>
+                      <a href="booking.php?id=<?php echo $flight['id'] ?>" class="btn btn-warning col-lg-8">Select</a>
                     </div>
                   </div>
+                  <!-- Flight Details -->
                   <div class="accordion mt-1" id="accordionExample<?php echo $count ?>">
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne<?php echo $count ?>">
@@ -409,7 +525,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
 
                               </div>
                             </div>
-
+                            <!-- Baggage, Fare, Policy -->
                             <div class="col-lg-6">
                               <ul class="nav nav-pills mb-3" id="pills-tab<?php echo $count ?>" role="tablist">
                                 <li class="nav-item" role="presentation">
