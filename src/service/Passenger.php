@@ -1,5 +1,7 @@
 <?php
 include_once __DIR__ . "/../db/database.php";
+include_once __DIR__ . "/../service/Booking.php";
+// include "./Booking.php";
 
 class Passenger
 {
@@ -14,7 +16,7 @@ class Passenger
   public function savePassenger($formData)
   {
     //print_r($formData);
-
+    $flightId = $formData['flightId'];
     $userId = $formData['userId'];
     $firstName = $formData['firstName'];
     $lastName = $formData['lastName'];
@@ -25,26 +27,27 @@ class Passenger
 
     $insertQuery = "INSERT into passenger(user_id, first_name, last_name, nationality, passport, email, contact) values ('$userId', '$firstName', '$lastName', '$nationality', '$passport', '$email', '$contact')";
 
-
     $savedData = $this->db->create($insertQuery);
 
-    // if ($savedData) {
-    //   header("refresh:2; url=passengers.php");
-    //   echo "
-    //   <div class='alert alert-success alert-dismissible fade show' role='alert'> 
-    //     Passenger purchase successful..!! 
-    //     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
-    //     </button>
-    //   </div>";
-    //   exit();
-    // } else {
-    //   echo "
-    //   <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
-    //     Fail to purchase passenger...!! Plz fill up all fields carefully.
-    //     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
-    //     </button>
-    //   </div>";
-    // }
+    if ($savedData) {
+      // Retrieve the last inserted ID
+      //$passengerId = $this->db->connection->insert_id;
+      $savedPassenger = $this->fetchPassenger($savedData)->fetch_assoc();
+      // print_r($savedPassenger);
+      // print_r($savedPassenger['id']);
+      // insert data into booking table
+      $booking = new Booking();
+      $bookingData = array(
+        "userId" => $userId,
+        "flightId" => $flightId,
+        "passengerId" => $savedPassenger['id']
+      );
+      //print_r($bookingData);
+      $savedBooking = $booking->saveBooking($bookingData);
+      return array_merge($savedPassenger, $savedBooking);
+    } else {
+      return null;
+    }
   }
 
   public function fetchPassengers()
@@ -60,6 +63,16 @@ class Passenger
   public function fetchPassenger($id)
   {
     $selectQuery = "select * from passenger where id=$id";
+    $passenger = $this->db->select($selectQuery);
+    if ($passenger)
+      return $passenger;
+    else
+      return null;
+  }
+
+  public function fetchPassengerByUserId($userId)
+  {
+    $selectQuery = "select * from passenger where user_id=$userId";
     $passenger = $this->db->select($selectQuery);
     if ($passenger)
       return $passenger;

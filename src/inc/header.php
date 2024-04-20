@@ -12,6 +12,7 @@ if (isset($_GET['action']) && $_GET['action'] == "logout") {
 /*  get login info and username */
 $login = Session::get('login');
 $username = Session::get('username');
+$userId = Session::get('id');
 
 /* declare root_url as var to use it inside heredoc syntax; */
 $root_url = ROOT_URL;

@@ -1,12 +1,16 @@
 <?php
 
 include_once __DIR__ . '../../config.php';
-include "./service/Airport.php";
-include "./service/Airline.php";
-include "./service/Flight.php";
-include "./service/Ticket.php";
-include "./service/Session.php";
-include "./service/User.php";
+
+include_once "./inc/header.php";
+
+include_once "./service/Airport.php";
+include_once "./service/Airline.php";
+include_once "./service/Flight.php";
+include_once "./service/Ticket.php";
+include_once "./service/Session.php";
+include_once "./service/User.php";
+include_once "./service/Passenger.php";
 
 // login
 $user = new User();
@@ -18,27 +22,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
   // }
 }
 
-$ap = new Airport();
-$airports = $ap->fetchAirports();
 
-$al = new Airline();
-$airlines = $al->fetchAirlines();
 
 $showflights = false;
 
-$flight = new Flight();
+//fetch flight Id
+if (isset($_GET['id'])) {
+  $flightID = $_GET['id'];
+  //echo "Flight Id $flightID";
+  $f = new Flight();
+  $flight = $f->fetchFlight($flightID)->fetch_assoc();
+  // print_r($flight);
+}
 
-/** Save ticket details */
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm'])) {
+/** Save passenger and booking details */
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
-  $ticket = new Ticket();
-  $ticket->bookTicket($_POST);
   //print_r($_POST);
+  $passenger = new Passenger();
+  $savedData = $passenger->savePassenger($_POST);
+  if ($savedData) {
+    //print_r($savedData);
+    echo "
+      <div class='alert alert-success alert-dismissible fade show' role='alert'> 
+        Ticket booked successful..!! 
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+    header("refresh:3; url=mybooking.php");
+    exit();
+  } else {
+    echo "
+      <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
+        Fail to book tikect..!! Plz fill up all fields carefully.
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+  }
 }
 
 ?>
 
-<?php include "./inc/header.php"; ?>
 
 <body class="text-center">
   <section class="text-center">
@@ -93,36 +117,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm'])) {
               <div class="accordion-body">
                 <div class="col-lg-12 text-start">
                   <form action="" method="post" class="row g-3">
+
+                    <input type="hidden" class="form-control" id="userId" name="userId" value="<?php echo $userId ?>" required>
+
+                    <input type="hidden" class="form-control" id="flightId" name="flightId" value="<?php echo $flight['id'] ?>" required>
+
                     <div class="col-md-6">
                       <label for="firstName" class="form-label">First Name</label>
-                      <input type="text" class="form-control" id="firstName" name="firstName">
+                      <input type="text" class="form-control" id="firstName" name="firstName" required>
                     </div>
                     <div class="col-md-6">
                       <label for="lastName" class="form-label">Last Name</label>
-                      <input type="text" class="form-control" id="lastName" name="lastName">
+                      <input type="text" class="form-control" id="lastName" name="lastName" required>
                     </div>
                     <div class="col-md-6">
                       <label for="nationality" class="form-label">Nationality</label>
-                      <input type="text" class="form-control" id="nationality" name="nationality">
+                      <input type="text" class="form-control" id="nationality" name="nationality" required>
                     </div>
                     <div class="col-md-6">
                       <label for="passport" class="form-label">Passport No</label>
-                      <input type="text" class="form-control" id="passport" name="passport">
+                      <input type="text" class="form-control" id="passport" name="passport" required>
                     </div>
                     <div class="col-md-6">
                       <label for="email" class="form-label">Email</label>
-                      <input type="email" class="form-control" id="email" name="email">
+                      <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                     <div class="col-md-6">
                       <label for="contact" class="form-label">Contact No</label>
-                      <input type="text" class="form-control" id="contact" name="contact">
+                      <input type="text" class="form-control" id="contact" name="contact" required>
                     </div>
                     <div class="col-12">
                       <?php
                       if ($login) {
                         //echo $username;
                         echo <<<HTML
-                              <input type="submit" class="btn btn-lg btn-warning" name="confirm" value="Confirm" />
+                              <input type="submit" class="btn btn-lg btn-warning" name="confirmBooking" value="Confirm Booking" />
                             HTML;
                       } else {
                         echo <<<HTML
@@ -188,6 +217,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm'])) {
       </div>
     </div>
   </div>
+
+  <!-- footer -->
   <?php include "./inc/footer.php"; ?>
 
 </body>

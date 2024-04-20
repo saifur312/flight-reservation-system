@@ -12,6 +12,7 @@ if (isset($_GET['action']) && $_GET['action'] == "logout") {
 /*  get login info and username */
 $login = Session::get('login');
 $username = Session::get('username');
+$userId = Session::get('id');
 
 /* declare root_url as var to use it inside heredoc syntax; */
 $root_url = ROOT_URL;
@@ -61,7 +62,10 @@ $root_url = ROOT_URL;
           } else {
             echo <<<HTML
                     <li class="nav-item">
-                      <a class="nav-link" href="{$root_url}setup/ticket/myticket.php">My Tickets</a>
+                      <a class="nav-link" href="{$root_url}mybooking.php">My Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="{$root_url}myticket.php">My Tickets</a>
                     </li>
                   HTML;
           }

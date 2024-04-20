@@ -83,7 +83,8 @@ class Database
      * show success or error msg 
      */
     if ($insertedData) {
-      return $insertedData;
+      $insertedId = $this->connection->insert_id;
+      return $insertedId;
       //echo "<h3 style='color:green'> Data Stored successful</h3>";
     } else
       die("Error...(" . $this->connection->errno . ")" . $this->connection->error);

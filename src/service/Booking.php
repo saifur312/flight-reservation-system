@@ -20,28 +20,18 @@ class Booking
     $passengerId = $formData['passengerId'];
 
     $insertQuery = "INSERT into booking(flight_id, user_id, passenger_id) 
-                      values ('$userId', '$flightId', '$passengerId'";
-
+                      values ('$flightId', '$userId', '$passengerId')";
 
     $savedData = $this->db->create($insertQuery);
 
-    // if ($savedData) {
-    //   header("refresh:2; url=bookings.php");
-    //   echo "
-    //   <div class='alert alert-success alert-dismissible fade show' role='alert'> 
-    //     Booking purchase successful..!! 
-    //     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
-    //     </button>
-    //   </div>";
-    //   exit();
-    // } else {
-    //   echo "
-    //   <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
-    //     Fail to purchase booking...!! Plz fill up all fields carefully.
-    //     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
-    //     </button>
-    //   </div>";
-    // }
+    if ($savedData) {
+      // Retrieve the last inserted ID
+      //$bookingId = $this->db->connection->insert_id;
+      $savedBooking = $this->fetchBooking($savedData)->fetch_assoc();
+      return $savedBooking;
+    } else {
+      return null;
+    }
   }
 
   public function fetchBookings()
@@ -57,6 +47,16 @@ class Booking
   public function fetchBooking($id)
   {
     $selectQuery = "select * from booking where id=$id";
+    $booking = $this->db->select($selectQuery);
+    if ($booking)
+      return $booking;
+    else
+      return null;
+  }
+
+  public function fetchBookingByUserId($userId)
+  {
+    $selectQuery = "select * from booking where user_id=$userId";
     $booking = $this->db->select($selectQuery);
     if ($booking)
       return $booking;
