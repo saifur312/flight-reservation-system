@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . "/../db/database.php";
+//include_once "./Session.php";
 class User
 {
   private $db;
@@ -21,13 +22,14 @@ class User
       Session::set("login", true);
       Session::set("id", $user['id']);
       Session::set("username", $user['username']);
-      Session::set("role", $user['role']);
+      //Session::set("role", $user['role']);
       Session::set("loginmsg", "<div class='alert alert-success alert-dismissible fade show' role='alert'> Login Success..!! <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button></div>");
 
       // Session::set("loginmsg", "<div class='alert alert-success alert-dismissible fade show' role='alert '> Login Success..!! </div>");
 
-      header("Location: ../../src/index.php");
+      //header("Location: ../../src/index.php");
       //exit;
+      return $user;
     } else {
       echo "<div class='alert alert-danger alert-dismissible fade show' role='alert '> Invalid Username or password </div>";
     }

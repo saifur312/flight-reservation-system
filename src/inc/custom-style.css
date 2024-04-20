@@ -11,14 +11,6 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.logo {
-  height: 100px;
-  width: 200px;
-}
-.logo-brand {
-  height: 25px;
-}
-
 /* #booking {
   font-family: 'Poppins', sans-serif;
   background-image: url('/public/images/gozayan.png');
