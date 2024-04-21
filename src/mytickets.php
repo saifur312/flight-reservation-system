@@ -11,11 +11,12 @@ include_once "./service/Session.php";
 include_once "./service/User.php";
 include_once "./service/Passenger.php";
 include_once "./service/Booking.php";
+include_once "./service/Ticket.php";
 
 
-$b = new Booking();
+$b = new Ticket();
 //fetch bookings of the user
-$bookings = $b->fetchBookingByUserId($userId);
+$tickets = $b->fetchTicketsByUserId($userId);
 //print_r($bookings->fetch_assoc());
 //fetch flights
 $f = new Flight();
@@ -92,12 +93,13 @@ if (isset($_GET['id'])) {
   <div class="container justify-content-center mt-4">
     <div class="row mb-4">
       <div class="col-lg-9">
-        <h4> Review Your Booking</h4>
+        <h4> Current Tickets</h4>
         <!-- Flight Details -->
         <table class="table mt-4">
           <thead>
             <tr>
               <th scope="col">SL</th>
+              <th scope="col">Ticket No</th>
               <th scope="col">Flight No</th>
               <th scope="col">From</th>
               <th scope="col">To</th>
@@ -106,11 +108,11 @@ if (isset($_GET['id'])) {
           </thead>
           <tbody>
             <?php
-            if ($bookings) {
+            if ($tickets) {
               $count = 1;
               //while ($flight = $flights->fetch_assoc()) {
-              while ($booking = $bookings->fetch_assoc()) {
-                $flight = $f->fetchFlight($booking['flight_id'])->fetch_assoc();
+              while ($ticket = $tickets->fetch_assoc()) {
+                $flight = $f->fetchFlight($ticket['flight_id'])->fetch_assoc();
                 if ($flight) {
             ?>
                   <tr>
@@ -119,12 +121,13 @@ if (isset($_GET['id'])) {
                       echo $count;
                       ?>
                     </td>
+                    <td> <?php echo $ticket['id']; ?> </td>
                     <td> <?php echo $flight['id']; ?> </td>
                     <td> <?php echo $flight['source']; ?> </td>
                     <td> <?php echo $flight['destination']; ?> </td>
-                    <td> <a href="payment.php?flightId=<?php echo urlencode($flight['id']); ?>">
-                        Pay now</td>
-                    <td> <a href="update-airline.php?id=<?php echo urlencode($flight['id']); ?>">
+                    <td> <a href="payment.php?ticketId=<?php echo urlencode($ticket['id']); ?>">
+                        View</td>
+                    <td> <a href="#">
                         Cancel</td>
                   </tr>
             <?php

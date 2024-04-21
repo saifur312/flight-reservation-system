@@ -62,10 +62,10 @@ $root_url = ROOT_URL;
           } else {
             echo <<<HTML
                     <li class="nav-item">
-                      <a class="nav-link" href="{$root_url}mybooking.php">My Bookings</a>
+                      <a class="nav-link" href="{$root_url}mybookings.php">My Bookings</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="{$root_url}myticket.php">My Tickets</a>
+                      <a class="nav-link" href="{$root_url}mytickets.php">My Tickets</a>
                     </li>
                   HTML;
           }

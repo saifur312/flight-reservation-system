@@ -1,9 +1,12 @@
 <?php
 
 include_once __DIR__ . '../../config.php';
+include "./inc/header.php";
 include "./service/Airport.php";
 include "./service/Airline.php";
 include "./service/Flight.php";
+include "./service/Ticket.php";
+include "./service/Payment.php";
 
 $ap = new Airport();
 $airports = $ap->fetchAirports();
@@ -15,34 +18,43 @@ $showflights = false;
 
 $f = new Flight();
 
-if (isset($_GET['flightId'])) {
+if (isset($_GET['ticketId'])) {
   // Retrieve the data from the query string
-  $flightId = $_GET['flightId'];
-
-  //echo "$src + $dst + $dep + $arv";
-  $flight = $f->fetchFlight($flightId)->fetch_assoc();
-  print_r($flight);
-  // if ($flight) {
-  //   $showflights = true;
-  // }
+  $ticketId = $_GET['ticketId'];
+  $t = new Ticket();
+  $ticket = $t->fetchTicket($ticketId)->fetch_assoc();
+  //fetch flight 
+  $flight = $f->fetchFlight($ticket['flight_id'])->fetch_assoc();
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
-  $flights = $flight->filterFlights(
-    $_POST['source'],
-    $_POST['destination'],
-    $_POST['departure'],
-    $_POST['arrival']
-  );
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
+  print_r($_POST);
 
-  if ($flights)
-    $showflights = true;
+  $p = new Payment();
+  $savedPayment = $p->savePayment($_POST);
+  if ($savedPayment) {
+    //print_r($savedPayment);
+    echo "
+      <div class='alert alert-success alert-dismissible fade show' role='alert'> 
+        Payment successful..!! 
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+    header("refresh:3; url=mybooking.php");
+    exit();
+  } else {
+    echo "
+      <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
+        Payment Failure..!! Plz fill up all fields carefully.
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+        </button>
+      </div>";
+  }
 }
 
 ?>
 
-<?php include "./inc/header.php"; ?>
 
 <body class="text-center">
   <section class="text-center">
@@ -116,13 +128,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
               </div>
               <div class="modal-body">
                 <form action="" method="post" class="row g-3">
-                  <div class="col-md-6">
-                    <label for="amount" class="form-label">Amount</label>
-                    <input type="number" class="form-control" id="amount" name="amount" readonly>
+                  <input type="hidden" class="form-control" id="ticketId" name="ticketId" value="<?php echo $ticket['id']; ?>">
+                  <input type="hidden" class="form-control" id="method" name="method" value="bKash">
+                  <div class="row col-md-12">
+                    <label class="col-md-3 form-label">Ticket No:</label>
+                    <label class="col-md-3 form-label"><?php echo $ticket['id']; ?></label>
+                    <label class="col-md-3 form-label">Flight No:</label>
+                    <label class="col-md-3 form-label"><?php echo $flight['id']; ?></label>
+                    <label class="col-md-3 form-label">You Pay:</label>
+                    <label class="col-md-3 form-label"><?php echo $ticket['amount']; ?></label>
+                    <label class="col-md-3 form-label">Name:</label>
+                    <label class="col-md-3 form-label"><?php echo $username; ?></label>
                   </div>
                   <div class="col-md-6">
                     <label for="bkashNumber" class="form-label">Bkash Number</label>
-                    <input type="number" class="form-control" id="bkashNumber" name="bkashNumber">
+                    <input type="number" class="form-control" id="accountNo" name="accountNo">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="contact" class="form-label">Contact No</label>
+                    <input type="text" class="form-control" id="contact" name="contact">
                   </div>
                   <div class="col-md-6">
                     <label for="code" class="form-label">Verification Code</label>
@@ -132,16 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
                     <label for="pin" class="form-label">PIN</label>
                     <input type="number" class="form-control" id="pin" name="pin">
                   </div>
-                  <div class="col-md-6">
-                    <label for="contact" class="form-label">Contact No</label>
-                    <input type="text" class="form-control" id="contact" name="contact">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="contact" class="form-label">Flight No</label>
-                    <input type="text" class="form-control" id="flightId" name="flightId" value="<?php echo $flight['id'] ?>" readonly>
-                  </div>
                   <div class="col-12">
-                    <input type="submit" class="btn btn-lg btn-warning" name="submit" value="Submit" />
+                    <input type="submit" class="btn btn-lg btn-warning" name="payment" value="Pay" />
                   </div>
                 </form>
               </div>

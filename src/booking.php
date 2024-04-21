@@ -38,7 +38,10 @@ if (isset($_GET['id'])) {
 /** Save passenger and booking details */
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
-  //print_r($_POST);
+  // print_r($_POST);
+  // $_POST["passengerId"] = 1000;
+  // print_r($_POST);
+
   $passenger = new Passenger();
   $savedData = $passenger->savePassenger($_POST);
   if ($savedData) {
@@ -88,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
               </button>
             </h2>
             <div id="flush-collapseFlightDetails1" class="accordion-collapse collapse show" aria-labelledby="flush-FlightDetails1" data-bs-parent="#accordionFlightDetails1">
-              <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+              <div class="accordion-body">Flight Details</div>
             </div>
           </div>
         </div>
@@ -101,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
               </button>
             </h2>
             <div id="flush-collapseFlightDetails2" class="accordion-collapse collapse show" aria-labelledby="flush-FlightDetails2" data-bs-parent="#accordionFlightDetails1">
-              <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+              <div class="accordion-body">Flight Details</div>
             </div>
           </div>
         </div>
@@ -145,6 +148,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
                     <div class="col-md-6">
                       <label for="contact" class="form-label">Contact No</label>
                       <input type="text" class="form-control" id="contact" name="contact" required>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="row justify-content-center mt-2">
+                        <div class="col-1 text-start">
+                          <label for="adult" class="col-form-label-sm">Adult(s)</label>
+                        </div>
+                        <div class="col-2 text-start">
+                          <input type="number" min="1" name="adult" class="form-control form-control-sm" value="1">
+                        </div>
+                        <div class="col-1 text-start">
+                          <label for="child" class="col-form-label-sm">Child(s)</label>
+                        </div>
+                        <div class="col-2 text-start">
+                          <input type="number" name="child" class="form-control form-control-sm" value="0">
+                        </div>
+                        <div class="col-1 text-start">
+                          <label for="class" class="col-form-label-sm">Class</label>
+                        </div>
+                        <div class="col-2 text-start">
+                          <select class="form-select form-select-sm " aria-label=".form-select-sm" name="class" required>
+                            <option value="First Class">First Class</option>
+                            <option value="Economy" selected>Economy</option>
+                            <option value="Business">Business</option>
+                          </select>
+                        </div>
+                        <div class="col-1 text-start">
+                          <label for="amount" class="col-form-label-sm"> Amount</label>
+                        </div>
+                        <div class="col-2 text-start">
+                          <input type="number" name="amount" class="form-control form-control-sm" readonly>
+                        </div>
+                      </div>
                     </div>
                     <div class="col-12">
                       <?php

@@ -82,6 +82,52 @@
     // select2
     $('.select2').select2();
 
+    $('#search-btn').on('click', function() {
+      event.preventDefault(); // Prevent the form from submitting
+      var source = encodeURIComponent($("[name='source']").val());
+      var destination = encodeURIComponent($("[name='destination']").val());
+      var departure = encodeURIComponent($("[name='departure']").val());
+      var arrival = encodeURIComponent($("[name='arrival']").val());
+
+      // Construct the URL with query parameters
+      var url = 'search-flights.php?source=' + source + '&destination=' + destination +
+        '&departure=' + departure + '&arrival=' + arrival;
+
+      // Redirect to the constructed URL
+      window.location.href = url;
+    });
+
+    // function updateMinPriceValue(value) {
+    //   var minPriceLabel = document.getElementById('minPriceLabel');
+    //   var maxPrice = document.getElementById('maxPrice').value;
+
+    //   // Prevent the min price from being greater than the max price
+    //   if (parseInt(value) > parseInt(maxPrice)) {
+    //     value = maxPrice;
+    //     document.getElementById('minPrice').value = maxPrice;
+    //   }
+
+    //   minPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
+    // }
+
+    // function updateMaxPriceValue(value) {
+    //   var maxPriceLabel = document.getElementById('maxPriceLabel');
+    //   var minPrice = document.getElementById('minPrice').value;
+
+    //   // Prevent the max price from being less than the min price
+    //   if (parseInt(value) < parseInt(minPrice)) {
+    //     value = minPrice;
+    //     document.getElementById('maxPrice').value = minPrice;
+    //   }
+
+    //   maxPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
+    // }
+
+    // // Initialize default values
+    // updateMinPriceValue(document.getElementById('minPrice').value);
+    // updateMaxPriceValue(document.getElementById('maxPrice').value);
+
+
     // $('#search-btn').on('click', function() {
     //   var source = $("[name='source']").val();
     //   var destination = $("[name='destination']").val();
@@ -98,23 +144,6 @@
 
     //   window.location.href = 'search-flights.php';
     // });
-
-    $('#search-btn').on('click', function() {
-      event.preventDefault(); // Prevent the form from submitting
-      var source = encodeURIComponent($("[name='source']").val());
-      var destination = encodeURIComponent($("[name='destination']").val());
-      var departure = encodeURIComponent($("[name='departure']").val());
-      var arrival = encodeURIComponent($("[name='arrival']").val());
-
-      // Construct the URL with query parameters
-      var url = 'search-flights.php?source=' + source + '&destination=' + destination +
-        '&departure=' + departure + '&arrival=' + arrival;
-
-      // Redirect to the constructed URL
-      window.location.href = url;
-    });
-
-
 
     // $('form').on('submit', function() {
     //   // Show the spinner and blur the page

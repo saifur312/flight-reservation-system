@@ -44,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
     $showflights = true;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
+  print_r($_POST);
+}
+
 ?>
 
 <?php include "./inc/header.php"; ?>
@@ -52,6 +56,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
   .filter-bar {
     min-height: 40px;
     background-color: #ffffff;
+  }
+
+  .dual-range-slider {
+    position: relative;
+  }
+
+  .price-range-labels {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    /* Adjust as needed */
+  }
+
+  .min-price,
+  .max-price {
+    font-size: 0.875rem;
+  }
+
+  /* noUi slider */
+  .slider-container {
+    position: relative;
+  }
+
+  .price-range-labels {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+  }
+
+  #price-lower,
+  #price-upper {
+    font-size: 0.875rem;
+  }
+
+  #price-slider-round {
+    height: 10px;
+  }
+
+  #price-slider-round .noUi-connect {
+    /* background: #c0392b; */
+    background: blue;
+  }
+
+  #price-slider-round .noUi-handle {
+    height: 18px;
+    width: 18px;
+    top: -5px;
+    right: -9px;
+    /* half the width */
+    border-radius: 9px;
   }
 </style>
 
@@ -181,7 +235,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
-      <div class="tab-pane fade show active" id="empty-tab-pane" role="tabpanel" aria-labelledby="empty-tab" tabindex="0"></div>
+      <div class="tab-pane fade show active" id="empty-tab-pane" role="tabpanel" aria-labelledby="empty-tab" tabindex="0">
+      </div>
+
       <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
         <div class="row text-start pt-2">
           <div class="col-lg-3">
@@ -224,41 +280,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
       </div>
 
       <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <div class="row text-start pt-2">
-          <div class="col-lg-3">
-            <div class="col-lg-12">
-              <div>
-                <b> Fare Type </b>
+        <div class="pt-2">
+          <form id="filter-form" class="row " action="" method="post">
+
+            <input type="hidden" id="source" name="source" value="<?php echo $src ?>">
+            <input type="hidden" id="destination" name="destination" value="<?php echo $dst ?>">
+            <input type="hidden" id="departure" name="departure" value="<?php echo $dep ?>">
+            <input type="hidden" id="arrival" name="arrival" value="<?php echo $arv ?>">
+
+            <div class="col-lg-3">
+              <div class="col-lg-12">
+                <div>
+                  <b> Fare Type </b>
+                </div>
+                <div class="form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+                </div>
               </div>
-              <div class="form-check form-switch pt-2">
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+
+              <div class="col-lg-12">
+                <label for="priceRange" class="form-label"><b>Price Range</b></label>
+                <div class="slider-container">
+                  <!-- <div id="price-slider"></div> -->
+                  <div class="slider-styled" id="price-slider-round"></div>
+                  <div class="price-range-labels">
+                    <div id="price-lower"></div>
+                    <div id="price-upper"></div>
+                  </div>
+                </div>
+                <input type="hidden" id="minPrice" name="minPrice" value="2500">
+                <input type="hidden" id="maxPrice" name="maxPrice" value="35000">
               </div>
             </div>
-            <div class="col-lg-12">
-              <label for="customRange2" class="form-label"><b> Price Range </b></label>
-              <input type="range" class="form-range" min="0" max="5" id="customRange2">
-            </div>
-          </div>
-          <div class="col-lg-3">
-            <div class="col-lg-12">
-              <div>
-                <b> Airlines </b>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
-                <label class="form-check-label" for="flexCheckDefault1">
-                  Biman Bangladesh Airlines
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
-                <label class="form-check-label" for="flexCheckDefault2">
-                  US Bangla
-                </label>
+            <div class="col-lg-3">
+              <div class="col-lg-12">
+                <div>
+                  <b> Airlines </b>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Biman Bangladesh Airlines" id="flexCheckDefault1" name="airline[]">
+                  <label class=" form-check-label" for="flexCheckDefault1">
+                    Biman Bangladesh Airlines
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="US Bangla" id="flexCheckDefault2" name="airline[]">
+                  <label class=" form-check-label" for="flexCheckDefault2">
+                    US Bangla
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
+            <div class="col-lg-3 ">
+              <input type="submit" class="btn btn-lg btn-warning" name="filter" value="Apply Filter" />
+            </div>
+          </form>
         </div>
       </div>
 
@@ -274,10 +351,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
                 <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
               </div>
             </div>
-            <div class="col-lg-12">
+            <!-- <div class="col-lg-12">
               <label for="customRange2" class="form-label"><b> Price Range </b></label>
               <input type="range" class="form-range" min="0" max="5" id="customRange2">
+            </div> -->
+            <div class="col-lg-12">
+              <label for="priceRange" class="form-label"><b>Price Range</b></label>
+              <div class="dual-range-slider">
+                <input type="range" class="form-range" id="minPrice" name="minPrice" min="0" max="50000" oninput="updateMinPriceValue(this.value);">
+                <input type="range" class="form-range" id="maxPrice" name="maxPrice" min="0" max="50000" oninput="updateMaxPriceValue(this.value);">
+                <div class="price-range-labels">
+                  <div class="min-price" id="minPriceLabel">BDT 12,998</div>
+                  <div class="max-price" id="maxPriceLabel">BDT 32,998</div>
+                </div>
+              </div>
             </div>
+
           </div>
           <div class="col-lg-3">
             <div class="col-lg-12">
@@ -285,13 +374,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
                 <b> Airlines </b>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1">
+                <input class="form-check-input" type="checkbox" value="Biman Bangladesh Airlines" id="flexCheckDefault1">
                 <label class="form-check-label" for="flexCheckDefault1">
                   Biman Bangladesh Airlines
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault2">
+                <input class="form-check-input" type="checkbox" value="US Bangla" id="flexCheckDefault2">
                 <label class="form-check-label" for="flexCheckDefault2">
                   US Bangla
                 </label>
@@ -481,7 +570,76 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
 
 
   <?php include "./inc/footer.php" ?>
+  <!-- noUi slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
 
+  <script>
+    // Include noUiSlider's JavaScript and CSS in your HTML file
+
+    // Initialize the noUiSlider
+    var priceSlider = document.getElementById('price-slider-round');
+
+    noUiSlider.create(priceSlider, {
+      // start: [12998, 32998], // Starting values for the handles
+      // connect: true, // Display a colored bar between the handles
+      // range: {
+      //   'min': 0,
+      //   'max': 50000
+      // }
+      start: [2500, 35000], // Starting values for the handles
+      connect: true, // Display a colored bar between the handles
+      range: {
+        'min': 2500,
+        'max': 35000
+      },
+      step: 100
+    });
+
+    // Update the label when the slider value changes
+    priceSlider.noUiSlider.on('update', function(values, handle) {
+      var value = values[handle];
+
+      if (handle) { // if it's the upper handle
+        document.getElementById('price-upper').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
+        document.getElementById('maxPrice').value = `${parseFloat(value).toLocaleString()}`;
+      } else { // if it's the lower handle
+        document.getElementById('price-lower').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
+        document.getElementById('minPrice').value = `${parseFloat(value).toLocaleString()}`;
+      }
+    });
+
+
+
+    function updateMinPriceValue(value) {
+      var minPriceLabel = document.getElementById('minPriceLabel');
+      var maxPrice = document.getElementById('maxPrice').value;
+
+      // Prevent the min price from being greater than the max price
+      if (parseInt(value) > parseInt(maxPrice)) {
+        value = maxPrice;
+        document.getElementById('minPrice').value = maxPrice;
+      }
+
+      minPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
+    }
+
+    function updateMaxPriceValue(value) {
+      var maxPriceLabel = document.getElementById('maxPriceLabel');
+      var minPrice = document.getElementById('minPrice').value;
+
+      // Prevent the max price from being less than the min price
+      if (parseInt(value) < parseInt(minPrice)) {
+        value = minPrice;
+        document.getElementById('maxPrice').value = minPrice;
+      }
+
+      maxPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
+    }
+
+    // Initialize default values
+    updateMinPriceValue(document.getElementById('minPrice').value);
+    updateMaxPriceValue(document.getElementById('maxPrice').value);
+  </script>
 </body>
 
 </html>

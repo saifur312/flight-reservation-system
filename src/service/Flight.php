@@ -69,7 +69,7 @@ class Flight
 
 
 
-  public function filterFlights($src, $dst, $dep, $ret)
+  public function filterFlights($src, $dst, $dep, $arv = null, $minPrice = null, $maxPrice = null, $airlines = [])
   {
     //echo $src, $dst, $dep, $ret;
     /** search by source, destination, departure and arrival/return */
@@ -84,6 +84,19 @@ class Flight
       destination LIKE '$dst' AND 
       Date(departure) = '$dep'";
 
+    // if ($arv) {
+    //   $selectQuery .= " AND Date(arrival) = '$arv'";
+    // }
+    if ($minPrice) {
+      $selectQuery .= " AND price >= $minPrice";
+    }
+    if ($maxPrice) {
+      $selectQuery .= " AND price <= $maxPrice";
+    }
+    if (!empty($airlines)) {
+      $airlineQuery = implode("','", array_map('mysqli_real_escape_string', $airlines));
+      $selectQuery .= " AND airline IN ('$airlineQuery')";
+    }
 
     $flights = $this->db->select($selectQuery);
     //print_r($flights);

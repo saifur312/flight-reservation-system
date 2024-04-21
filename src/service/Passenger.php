@@ -1,6 +1,7 @@
 <?php
 include_once __DIR__ . "/../db/database.php";
 include_once __DIR__ . "/../service/Booking.php";
+include_once __DIR__ . "/../service/Ticket.php";
 // include "./Booking.php";
 
 class Passenger
@@ -36,15 +37,24 @@ class Passenger
       // print_r($savedPassenger);
       // print_r($savedPassenger['id']);
       // insert data into booking table
-      $booking = new Booking();
-      $bookingData = array(
-        "userId" => $userId,
-        "flightId" => $flightId,
-        "passengerId" => $savedPassenger['id']
-      );
-      //print_r($bookingData);
-      $savedBooking = $booking->saveBooking($bookingData);
-      return array_merge($savedPassenger, $savedBooking);
+
+      //add passenger Id into $formData
+      $formData["passengerId"] = $savedPassenger['id'];
+
+      // $booking = new Booking();
+      // $bookingData = array(
+      //   "userId" => $userId,
+      //   "flightId" => $flightId,
+      //   "passengerId" => $savedPassenger['id']
+      // );
+      // //print_r($bookingData);
+      // $savedBooking = $booking->saveBooking($bookingData);
+      // return array_merge($savedPassenger, $savedBooking);
+
+      //save ticket
+      $ticket = new Ticket();
+      $savedTicket = $ticket->saveTicket($formData);
+      return array_merge($savedPassenger, $savedTicket);
     } else {
       return null;
     }
