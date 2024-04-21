@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2024 at 09:28 PM
+-- Generation Time: Apr 21, 2024 at 02:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -74,6 +74,32 @@ INSERT INTO `airport` (`id`, `name`, `code`, `country`, `city`, `contact`) VALUE
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `booking`
+--
+
+CREATE TABLE `booking` (
+  `id` int(11) NOT NULL,
+  `flight_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `passenger_id` int(11) NOT NULL,
+  `created_on` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`id`, `flight_id`, `user_id`, `passenger_id`, `created_on`) VALUES
+(1, 2, 1001, 1, NULL),
+(2, 3, 1001, 2, NULL),
+(3, 10002, 1004, 3, NULL),
+(4, 10001, 1004, 4, NULL),
+(5, 10001, 1007, 5, NULL),
+(6, 3, 1004, 6, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `flight`
 --
 
@@ -102,6 +128,54 @@ INSERT INTO `flight` (`id`, `source`, `destination`, `departure`, `arrival`, `pr
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `passenger`
+--
+
+CREATE TABLE `passenger` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `nationality` varchar(50) NOT NULL,
+  `passport` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `contact` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `passenger`
+--
+
+INSERT INTO `passenger` (`id`, `user_id`, `first_name`, `last_name`, `nationality`, `passport`, `email`, `contact`) VALUES
+(1, 1001, 'Md. Saifur', 'Rahman', 'Bangladeshi', '24236427', 'saifurcuet12@gmail.com', '+045373'),
+(2, 1004, 'atanu', 'atana', 'Bangladeshi', '24236427', 'atn@gmaul.com', '57384889');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment`
+--
+
+CREATE TABLE `payment` (
+  `id` int(11) NOT NULL,
+  `ticket_id` int(11) NOT NULL,
+  `method` varchar(30) NOT NULL,
+  `account_no` varchar(30) NOT NULL,
+  `contact` varchar(20) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment`
+--
+
+INSERT INTO `payment` (`id`, `ticket_id`, `method`, `account_no`, `contact`, `created_on`) VALUES
+(1, 1, 'bKash', '01682104732', '01645299007', '2024-04-21 13:18:56'),
+(2, 1, 'bKash', '01682104732', '01645299007', '2024-04-21 13:20:19');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ticket`
 --
 
@@ -114,17 +188,21 @@ CREATE TABLE `ticket` (
   `class` text NOT NULL,
   `seat_no` varchar(50) NOT NULL,
   `amount` int(11) NOT NULL,
-  `created_on` datetime DEFAULT current_timestamp()
+  `created_on` datetime DEFAULT current_timestamp(),
+  `paid` tinyint(1) NOT NULL DEFAULT 0,
+  `payment_id` int(11) NOT NULL,
+  `passenger_id` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `hold` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ticket`
 --
 
-INSERT INTO `ticket` (`id`, `flight_id`, `user_id`, `adult`, `child`, `class`, `seat_no`, `amount`, `created_on`) VALUES
-(1000, 3, 1001, 2, 1, '', '', 6000, NULL),
-(1001, 3, 1001, 1, 0, 'Economy', '', 6000, '2024-03-31 08:34:46'),
-(1002, 10002, 1001, 1, 2, 'Economy', '2A, 3B, 3C', 5000, '2024-03-31 08:43:22');
+INSERT INTO `ticket` (`id`, `flight_id`, `user_id`, `adult`, `child`, `class`, `seat_no`, `amount`, `created_on`, `paid`, `payment_id`, `passenger_id`, `active`, `hold`) VALUES
+(1, 10001, 1001, 1, 1, 'Economy', '', 0, '2024-04-21 11:53:05', 1, 2, 1, 1, 0),
+(2, 2, 1004, 1, 2, 'Business', '', 0, '2024-04-21 16:55:25', 0, 0, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -136,7 +214,7 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(30) NOT NULL,
-  `role` varchar(20) NOT NULL,
+  `role` varchar(20) DEFAULT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -156,7 +234,9 @@ INSERT INTO `user` (`id`, `username`, `password`, `role`, `first_name`, `last_na
 (1004, 'shanto', '12345', 'admin', '', '', '', '', '', ''),
 (1005, 'atanaaa', '123', 'pass..', '', '', '', '', '', ''),
 (1006, 'fara', 'f4566', 'passenger', '', '', '', '', '', ''),
-(1007, 'shimul', '1257', 'passenger.', '', '', '', '', '', '');
+(1007, 'shimul', '1257', 'passenger.', '', '', '', '', '', ''),
+(1009, 'admin', 'admin', NULL, '', '', 'admin@gmail.com', '', '', ''),
+(1010, 'test', '326624786', NULL, '', '', 'tes@gmail', '', '', '');
 
 --
 -- Indexes for dumped tables
@@ -175,9 +255,27 @@ ALTER TABLE `airport`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `flight`
 --
 ALTER TABLE `flight`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `passenger`
+--
+ALTER TABLE `passenger`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment`
+--
+ALTER TABLE `payment`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -209,22 +307,40 @@ ALTER TABLE `airport`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `booking`
+--
+ALTER TABLE `booking`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `flight`
 --
 ALTER TABLE `flight`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10004;
 
 --
+-- AUTO_INCREMENT for table `passenger`
+--
+ALTER TABLE `passenger`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `payment`
+--
+ALTER TABLE `payment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `ticket`
 --
 ALTER TABLE `ticket`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1003;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1009;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1011;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

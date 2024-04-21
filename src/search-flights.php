@@ -1,6 +1,7 @@
 <?php
 
 include_once __DIR__ . '../../config.php';
+include "./inc/header.php";
 include "./service/Airport.php";
 include "./service/Airline.php";
 include "./service/Flight.php";
@@ -13,6 +14,7 @@ $al = new Airline();
 $airlines = $al->fetchAirlines();
 
 $showflights = false;
+$rowCount = null;
 
 $flight = new Flight();
 
@@ -33,24 +35,48 @@ if (isset($_GET['source'])) {
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
+  //print_r($_POST);
+  // $flights = $flight->filterFlights(
+  //   $_POST['source'],
+  //   $_POST['destination'],
+  //   $_POST['departure'],
+  //   $_POST['arrival']
+  // );
+
+  // if ($flights)
+  //   $showflights = true;
+  // else
+  //   $showflights = false;
+
+  // header('Location: search-flights.php?source=' + $_POST['source'] + '&destination=' + $_POST['destination'] + '&departure=' + $_POST['departure'] + '&arrival=' + $_POST['arrival']);
+
+  header('Location: search-flights.php?source=' . urlencode($_POST['source']) . '&destination=' . urlencode($_POST['destination']) . '&departure=' . urlencode($_POST['departure']) . '&arrival=' . urlencode($_POST['arrival']));
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
+  //print_r($_POST['minPrice']);
+
   $flights = $flight->filterFlights(
     $_POST['source'],
     $_POST['destination'],
     $_POST['departure'],
-    $_POST['arrival']
+    $_POST['arrival'],
+    $_POST['minPrice'],
+    $_POST['maxPrice'],
+    $_POST['airline']
   );
 
-  if ($flights)
-    $showflights = true;
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
-  print_r($_POST);
+  if ($flights) {
+    //print_r($flights);
+    $rowCount = $flights->num_rows;
+    //print_r($rowCount);
+  }
+  //$showflights = true;
+  //header("Location: search-flights.php");
 }
 
 ?>
 
-<?php include "./inc/header.php"; ?>
 
 <style>
   .filter-bar {
@@ -209,6 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
             <div class="col-lg-2 text-center">
               <input type="submit" class="btn btn-lg btn-warning" name="search" value="Modify search" />
+              <!-- <a class="btn btn-lg btn-warning" href=""> Modify Search</a> -->
             </div>
 
           </form>
@@ -220,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
   <!-- filter-bar -->
   <div class="container filter-bar mt-2">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li>Filters</li>
+      <li style="width: 20%;" class="pt-2"> <strong> Filters </strong> </li>
       <li class="nav-item" role="presentation" style="display:none;">
         <button class="nav-link active" id="empty-tab" data-bs-toggle="tab" data-bs-target="#empty-tab-pane" type="button" role="tab" aria-controls="empty-tab-pane" aria-selected="true"></button>
       </li>
@@ -233,6 +260,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Airports</button>
       </li>
+      <li style="width: 20%;" class="pt-2"> <strong>
+          <?php if ($rowCount)
+            echo "Showing " . $rowCount . " Results"
+          ?> </strong> </li>
+
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="empty-tab-pane" role="tabpanel" aria-labelledby="empty-tab" tabindex="0">
@@ -280,15 +312,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       </div>
 
       <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <div class="pt-2">
+        <div class="pt-4 pb-4">
           <form id="filter-form" class="row " action="" method="post">
-
             <input type="hidden" id="source" name="source" value="<?php echo $src ?>">
             <input type="hidden" id="destination" name="destination" value="<?php echo $dst ?>">
             <input type="hidden" id="departure" name="departure" value="<?php echo $dep ?>">
             <input type="hidden" id="arrival" name="arrival" value="<?php echo $arv ?>">
 
-            <div class="col-lg-3">
+            <div class="col-lg-4 text-start">
               <div class="col-lg-12">
                 <div>
                   <b> Fare Type </b>
@@ -299,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                 </div>
               </div>
 
-              <div class="col-lg-12">
+              <div class="col-lg-12 pt-2">
                 <label for="priceRange" class="form-label"><b>Price Range</b></label>
                 <div class="slider-container">
                   <!-- <div id="price-slider"></div> -->
@@ -313,26 +344,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                 <input type="hidden" id="maxPrice" name="maxPrice" value="35000">
               </div>
             </div>
-            <div class="col-lg-3">
+
+            <div class="col-lg-4">
               <div class="col-lg-12">
                 <div>
                   <b> Airlines </b>
                 </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="Biman Bangladesh Airlines" id="flexCheckDefault1" name="airline[]">
-                  <label class=" form-check-label" for="flexCheckDefault1">
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Biman Bangladesh Airlines" id="airline1" name="airline[]">
+                  <label class="form-check-label col-lg-9" for="airline1">
                     Biman Bangladesh Airlines
                   </label>
                 </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="US Bangla" id="flexCheckDefault2" name="airline[]">
-                  <label class=" form-check-label" for="flexCheckDefault2">
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="US Bangla" id="airline2" name="airline[]">
+                  <label class=" form-check-label" for="airline2">
                     US Bangla
                   </label>
                 </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Dubai Airways" id="airline3" name="airline[]">
+                  <label class=" form-check-label" for="airline3">
+                    Dubai Airways
+                  </label>
+                </div>
+
               </div>
             </div>
-            <div class="col-lg-3 ">
+
+            <div class="col-lg-4 ">
               <input type="submit" class="btn btn-lg btn-warning" name="filter" value="Apply Filter" />
             </div>
           </form>
@@ -393,7 +433,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
   </div>
 
   <!-- Flights -->
-  <div class="container justify-content-center mt-4">
+  <div class="container justify-content-center mt-4 mb-4">
     <div class="row ">
       <div class="col-lg-9">
         <div class="row ">
@@ -601,10 +641,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
       if (handle) { // if it's the upper handle
         document.getElementById('price-upper').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
-        document.getElementById('maxPrice').value = `${parseFloat(value).toLocaleString()}`;
+        document.getElementById('maxPrice').value = `${parseFloat(value)}`;
       } else { // if it's the lower handle
         document.getElementById('price-lower').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
-        document.getElementById('minPrice').value = `${parseFloat(value).toLocaleString()}`;
+        document.getElementById('minPrice').value = `${parseFloat(value)}`;
       }
     });
 

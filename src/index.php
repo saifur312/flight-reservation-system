@@ -267,7 +267,7 @@ $showflights = false;
       </div>
     </div>
 
-
+    <!-- Special Offers -->
     <div class="container text-start mt-4 mb-4 offers">
       <h4 style="color: #1C3C6B"> <strong> Special Offers </strong> </h4>
       <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">

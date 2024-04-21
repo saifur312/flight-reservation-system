@@ -93,10 +93,21 @@ class Flight
     if ($maxPrice) {
       $selectQuery .= " AND price <= $maxPrice";
     }
+
     if (!empty($airlines)) {
-      $airlineQuery = implode("','", array_map('mysqli_real_escape_string', $airlines));
-      $selectQuery .= " AND airline IN ('$airlineQuery')";
+      // Quote each airline for use in the SQL query
+      $quotedAirlines = array_map(function ($item) {
+        return "'$item'";
+      }, $airlines);
+
+      // Create a string from the quoted airline array
+      $airlineQuery = implode(",", $quotedAirlines);
+
+      // Append to the select query
+      $selectQuery .= " AND airline IN ($airlineQuery)";
     }
+
+    //echo $selectQuery;
 
     $flights = $this->db->select($selectQuery);
     //print_r($flights);
