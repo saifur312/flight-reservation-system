@@ -259,7 +259,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
   <!-- filter-bar -->
   <div class="container filter-bar mt-2">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li style="width: 20%;" class="pt-2"> <strong> Filters </strong> </li>
+      <li style="width: 20%;" class="pt-2">
+        <strong> <i class="bi bi-funnel-fill"></i> Filters </strong>
+      </li>
       <li class="nav-item" role="presentation" style="display:none;">
         <button class="nav-link active" id="empty-tab" data-bs-toggle="tab" data-bs-target="#empty-tab-pane" type="button" role="tab" aria-controls="empty-tab-pane" aria-selected="true"></button>
       </li>
@@ -470,7 +472,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                 ?>
                 <a class="col-lg-12 btn btn-sm btn-light text-start" href="<?php echo $url; ?>">
                   <b> Cheapest</b>
-                  <p> Showing the cheapest flights in ascending order </p>
+                  <p> Showing the cheapest flights in ascending order
+                    <i class="bi bi-sort-down-alt"></i>
+                  </p>
                 </a>
               </div>
               <!-- <div class="vr" style="padding: 0;"></div> -->
@@ -481,7 +485,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                 ?>
                 <a id="fastestFlights" class="col-lg-12 btn btn-sm btn-light text-start" href="<?php echo $url; ?>">
                   <b> Fastest</b>
-                  <p> Click to see the fastest flights in ascending order </p>
+                  <p> Click to see the fastest flights in ascending order
+                    <i class="bi bi-sort-up-alt"></i>
+                  </p>
                 </a>
                 <!-- 'Location: search-flights.php?source=' . urlencode($_POST['source']) . '&destination=' . urlencode($_POST['destination']) . '&departure=' . urlencode($_POST['departure']) . '&arrival=' . urlencode($_POST['arrival']) -->
               </div>
@@ -649,6 +655,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       </div>
 
       <div class="col-lg-3">
+        <div class="col-lg-12" style="background-color: #ffffff; padding: 12px;">
+          <div id="timer" class="text-start" style="background-color: #ECF3FE; padding-left: 16px;">
+            <i class="bi bi-clock-fill h2"></i>
+            <span class="fs-1" id="time" style="padding-left: 16px;">
+              30:00
+            </span>
+            <p style="padding-left: 70px; margin: 0px;"> min sec </p>
+          </div>
+        </div>
+
         <div class="card mt-4 ">
           <div class="card-header text-start" style="background-color: #0E70A4; color: #ffffff;">
             <h6> Need Help ?</h6>
@@ -656,26 +672,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
           <ul class="list-group list-group-flush text-start mt-4">
             <li class="list-group-item col-md-12" style="border: none">
-              <span class="row">
-                <i class="bi bi-telephone-outbound-fill col-md-2"></i>
+              <span class="row align-items-center">
+                <i class="bi bi-telephone-outbound-fill col-md-2 " style="font-size: 25px; color: orange;"></i>
                 <h6 class="col-md-8"> +880-1643833992 </h6>
               </span>
             </li>
             <hr />
             <li class="list-group-item col-md-12" style="border: none">
-              <span class="row">
-                <i class="bi bi-envelope-check col-md-2"></i>
+              <span class="row align-items-center">
+                <i class="bi bi-envelope-check col-md-2" style="font-size: 25px; color: orange;"></i>
                 <h6 class="col-md-8"> admin@gamil.com </h6>
               </span>
             </li>
             <hr />
             <li class="list-group-item col-md-12" style="border: none">
-              <span class="row">
-                <i class="bi bi-messenger col-md-2"></i>
+              <span class="row align-items-center">
+                <i class="bi bi-messenger col-md-2" style="font-size: 25px; color: orange;"></i>
                 <h6 class="col-md-8"> m.me/admin </h6>
               </span>
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="timeoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #0E70A4; color: #ffffff">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Session Expired
+          </h1>
+        </div>
+        <div class="modal-body text-center">
+          <h4><i class="bi bi-alarm-fill"></i></h4>
+          <h3> Sorry, your session has expired</h3>
+          <a href="index.php" class="btn btn-lg btn-primary mt-3">Search Again</a>
         </div>
       </div>
     </div>
@@ -721,7 +756,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       }
     });
 
-    //
+    //countdown timer
+    var totalSeconds = 30 * 60; // 30 minutes in seconds
+    var timerInterval = setInterval(function() {
+      totalSeconds -= 1;
+      var minutes = Math.floor(totalSeconds / 60);
+      var seconds = totalSeconds % 60;
+      document.getElementById('time').textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+
+      if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        document.body.classList.add('modal-open'); // Add class to body to simulate the modal background
+        var myModal = new bootstrap.Modal(document.getElementById('timeoutModal'));
+        myModal.show();
+      }
+    }, 1000); // Run the function every 1 second
 
 
     // $(document).ready(function() {

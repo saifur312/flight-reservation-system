@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 21, 2024 at 02:30 PM
+-- Generation Time: Apr 21, 2024 at 11:35 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -110,20 +110,23 @@ CREATE TABLE `flight` (
   `departure` datetime NOT NULL,
   `arrival` datetime NOT NULL,
   `price` int(11) NOT NULL,
-  `airline` varchar(100) NOT NULL
+  `airline` varchar(100) NOT NULL,
+  `duration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `flight`
 --
 
-INSERT INTO `flight` (`id`, `source`, `destination`, `departure`, `arrival`, `price`, `airline`) VALUES
-(1, 'Shajalal Int. Airport', 'Chittagong Int. Airport', '2024-03-30 07:00:00', '2024-03-30 07:30:00', 7000, 'Biman Bangladesh Airlines'),
-(2, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 20:00:00', '0000-00-00 00:00:00', 4000, 'Biman Bangladesh Airlines'),
-(3, 'Sylhet Intl. Airport', 'Chittagong Int. Airport', '2024-03-31 09:00:00', '2024-02-01 20:50:00', 6000, 'Biman Bangladesh Airlines'),
-(10001, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 07:00:00', '2024-03-31 08:40:11', 4500, 'Biman Bangladesh Airlines'),
-(10002, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 22:00:00', '2024-03-31 11:31:21', 5000, 'Dubai Airways'),
-(10003, 'Shajalal Int. Airport', 'Shajalal Int. Airport', '2024-03-30 06:42:00', '2024-03-30 07:50:00', 5485, 'Dubai Airways');
+INSERT INTO `flight` (`id`, `source`, `destination`, `departure`, `arrival`, `price`, `airline`, `duration`) VALUES
+(1, 'Shajalal Int. Airport', 'Chittagong Int. Airport', '2024-03-30 07:00:00', '2024-03-30 07:30:00', 7000, 'Biman Bangladesh Airlines', 30),
+(2, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 20:00:00', '2024-03-31 21:50:00', 8650, 'Biman Bangladesh Airlines', 110),
+(3, 'Sylhet Intl. Airport', 'Chittagong Int. Airport', '2024-03-31 09:00:00', '2024-02-01 10:00:00', 6000, 'Biman Bangladesh Airlines', 60),
+(10001, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 07:00:00', '2024-03-31 08:40:00', 4500, 'Biman Bangladesh Airlines', 100),
+(10002, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 22:00:00', '2024-03-31 23:30:00', 6800, 'Dubai Airways', 90),
+(10003, 'Shajalal Int. Airport', 'Shajalal Int. Airport', '2024-03-30 06:45:00', '2024-03-30 07:50:00', 5485, 'Dubai Airways', 65),
+(10004, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-04-26 00:00:00', '2024-04-26 01:20:00', 25650, 'Qatar Airways', 80),
+(10005, 'Chittagong Int. Airport', 'Shajalal Int. Airport', '2024-03-31 00:00:00', '2024-03-31 01:30:00', 18000, 'Qatar Airways', 90);
 
 -- --------------------------------------------------------
 
@@ -316,7 +319,7 @@ ALTER TABLE `booking`
 -- AUTO_INCREMENT for table `flight`
 --
 ALTER TABLE `flight`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10004;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10006;
 
 --
 -- AUTO_INCREMENT for table `passenger`

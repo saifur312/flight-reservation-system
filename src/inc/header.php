@@ -28,7 +28,7 @@ $root_url = ROOT_URL;
 
   <!-- Bootstrap css  -->
   <link rel="stylesheet" href="<?php echo ROOT_URL; ?>libs/bootstrap-5.3.3-dist/css/bootstrap.css">
-  <!-- Bootstrap css  -->
+  <!-- Bootstrap icons  -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
 
   <!-- select2 css -->
