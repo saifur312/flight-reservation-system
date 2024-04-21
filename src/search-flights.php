@@ -24,9 +24,15 @@ if (isset($_GET['source'])) {
   $dst = $_GET['destination'];
   $dep = $_GET['departure'];
   $arv = $_GET['arrival'];
+  $fastest = false;
+  if (isset($_GET['fastest'])) {
+    //echo "Fastest " . $_GET['fastest'];
+    $fastest = $_GET['fastest'];
+    //echo "Fastest var " . $fastest;
+  }
 
   //echo "$src + $dst + $dep + $arv";
-  $flights = $flight->filterFlights($src, $dst, $dep, $arv);
+  $flights = $flight->filterFlights($src, $dst, $dep, $arv, urlencode($fastest));
 
   if ($flights) {
     $showflights = true;
@@ -61,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
     $_POST['destination'],
     $_POST['departure'],
     $_POST['arrival'],
+    false, //fastest
     $_POST['minPrice'],
     $_POST['maxPrice'],
     $_POST['airline']
@@ -68,7 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
   if ($flights) {
     //print_r($flights);
+    // print_r($flights->fetch_assoc());
     $rowCount = $flights->num_rows;
+
+    // while ($flight = $flights->fetch_assoc()) {
+    //   print_r($flight);
+    // }
     //print_r($rowCount);
   }
   //$showflights = true;
@@ -260,10 +272,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Airports</button>
       </li>
-      <li style="width: 20%;" class="pt-2"> <strong>
-          <?php if ($rowCount)
-            echo "Showing " . $rowCount . " Results"
-          ?> </strong> </li>
+      <?php if ($rowCount) {
+        // Construct the URL
+        $removeFilterUrl = "search-flights.php?source=$src&destination=$dst&departure=$dep&arrival=$arv";
+
+        echo <<<HTML
+                  <li style="width: 20%;" class="pt-2">
+                    <strong> Showing $rowCount Results </Strong>
+                  </li>
+                  <li class="pt-2">
+                    <a class="btn btn-sm btn-light text-start" href="$removeFilterUrl">
+                      Remove Filter
+                    </a>
+                  </li>
+                HTML;
+      }
+      ?>
 
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -439,9 +463,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
         <div class="row ">
           <div class="col-lg-12 filter-bar">
             <div class="row pt-1">
-              <div class="col-lg-6"> Cheapest</div>
-              <div class="vr" style="padding: 0;"></div>
-              <div class="col-lg-5"> Fastest</div>
+              <div class="col-lg-6" style="border-right: solid thin #eeeeee">
+                <?php
+                // Construct the URL
+                $url = "search-flights.php?source=$src&destination=$dst&departure=$dep&arrival=$arv";
+                ?>
+                <a class="col-lg-12 btn btn-sm btn-light text-start" href="<?php echo $url; ?>">
+                  <b> Cheapest</b>
+                  <p> Showing the cheapest flights in ascending order </p>
+                </a>
+              </div>
+              <!-- <div class="vr" style="padding: 0;"></div> -->
+              <div class="col-lg-6">
+                <?php
+                // Construct the URL
+                $url = "search-flights.php?source=$src&destination=$dst&departure=$dep&arrival=$arv&fastest=true";
+                ?>
+                <a id="fastestFlights" class="col-lg-12 btn btn-sm btn-light text-start" href="<?php echo $url; ?>">
+                  <b> Fastest</b>
+                  <p> Click to see the fastest flights in ascending order </p>
+                </a>
+                <!-- 'Location: search-flights.php?source=' . urlencode($_POST['source']) . '&destination=' . urlencode($_POST['destination']) . '&departure=' . urlencode($_POST['departure']) . '&arrival=' . urlencode($_POST['arrival']) -->
+              </div>
             </div>
           </div>
           <!-- show flights -->
@@ -450,7 +493,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
             $count = 1;
             while ($flight = $flights->fetch_assoc()) {
           ?>
-              <div class="card col-lg-12 text-center mt-4 " style="min-height: 25vh;">
+              <div class=" card col-lg-12 text-center mt-4 " style=" min-height: 25vh;">
 
                 <div class="card-body row">
                   <div class="col-lg-3">
@@ -465,44 +508,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-6">
+                  <div class="col-lg-7">
                     <div class="row">
-                      <div class="col-lg-4">
-                        <h5>
+                      <div class="col-lg-3">
+                        <p>
                           <?php echo
                           date('h:i A', strtotime($flight['departure']));
                           ?>
-                        </h5>
-                        <h5>
+                        </p>
+                        <p>
                           <?php
                           echo $ap->getCode($flight['source']);
                           ?>
-                        </h5>
+                        </p>
                       </div>
-                      <div class="col-lg-4">
+                      <div class="col-lg-3">
                         <img src="<?php echo ROOT_URL; ?>../public/images/arrow2.png" width="100%" height="auto" />
                       </div>
-                      <div class="col-lg-4">
-                        <h5>
+                      <div class="col-lg-3">
+                        <p>
                           <?php echo
                           date('h:i A', strtotime($flight['arrival']));
                           ?>
-                        </h5>
-                        <h5>
+                        </p>
+                        <p>
                           <?php
                           echo $ap->getCode($flight['destination']);
                           ?>
-                        </h5>
+                        </p>
+                      </div>
+                      <div class="col-lg-3">
+                        <p>
+                          <?php
+                          $duration = $flight['duration'];
+                          // Calculate days, hours, and minutes
+                          $days = intdiv($duration, 24 * 60);
+                          $hours = intdiv($duration % (24 * 60), 60);
+                          $minutes = $duration % 60;
+
+                          echo $days . "d " . $hours . "h " . $minutes . "m";
+                          ?>
+                        </p>
                       </div>
                     </div>
                   </div>
                   <!-- Select Flight -->
-                  <div class="col-lg-3">
+                  <div class="col-lg-2">
                     <div class="row justify-content-center">
-                      <h5>
+                      <p>
                         <?php echo "Flight  " . $flight['id'];
                         ?>
-                      </h5>
+                      </p>
                       <div class="col-lg-12">
                         <?php echo "BDT  " . $flight['price'];
                         ?>
@@ -594,14 +650,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
       <div class="col-lg-3">
         <div class="card mt-4 ">
-          <div class="card-header">
-            Need Help
+          <div class="card-header text-start" style="background-color: #0E70A4; color: #ffffff;">
+            <h6> Need Help ?</h6>
           </div>
 
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Contact</li>
-            <li class="list-group-item">Message</li>
-            <li class="list-group-item">Email</li>
+          <ul class="list-group list-group-flush text-start mt-4">
+            <li class="list-group-item col-md-12" style="border: none">
+              <span class="row">
+                <i class="bi bi-telephone-outbound-fill col-md-2"></i>
+                <h6 class="col-md-8"> +880-1643833992 </h6>
+              </span>
+            </li>
+            <hr />
+            <li class="list-group-item col-md-12" style="border: none">
+              <span class="row">
+                <i class="bi bi-envelope-check col-md-2"></i>
+                <h6 class="col-md-8"> admin@gamil.com </h6>
+              </span>
+            </li>
+            <hr />
+            <li class="list-group-item col-md-12" style="border: none">
+              <span class="row">
+                <i class="bi bi-messenger col-md-2"></i>
+                <h6 class="col-md-8"> m.me/admin </h6>
+              </span>
+            </li>
           </ul>
         </div>
       </div>
@@ -648,37 +721,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       }
     });
 
+    //
 
 
-    function updateMinPriceValue(value) {
-      var minPriceLabel = document.getElementById('minPriceLabel');
-      var maxPrice = document.getElementById('maxPrice').value;
+    // $(document).ready(function() {
+    //   $("#fastestFlights").click(function() {
+    //     $(this).removeClass('btn-light');
+    //     $(this).addClass('btn-info');
+    //   });
+    // });
 
-      // Prevent the min price from being greater than the max price
-      if (parseInt(value) > parseInt(maxPrice)) {
-        value = maxPrice;
-        document.getElementById('minPrice').value = maxPrice;
-      }
+    // function updateMinPriceValue(value) {
+    //   var minPriceLabel = document.getElementById('minPriceLabel');
+    //   var maxPrice = document.getElementById('maxPrice').value;
 
-      minPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
-    }
+    //   // Prevent the min price from being greater than the max price
+    //   if (parseInt(value) > parseInt(maxPrice)) {
+    //     value = maxPrice;
+    //     document.getElementById('minPrice').value = maxPrice;
+    //   }
 
-    function updateMaxPriceValue(value) {
-      var maxPriceLabel = document.getElementById('maxPriceLabel');
-      var minPrice = document.getElementById('minPrice').value;
+    //   minPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
+    // }
 
-      // Prevent the max price from being less than the min price
-      if (parseInt(value) < parseInt(minPrice)) {
-        value = minPrice;
-        document.getElementById('maxPrice').value = minPrice;
-      }
+    // function updateMaxPriceValue(value) {
+    //   var maxPriceLabel = document.getElementById('maxPriceLabel');
+    //   var minPrice = document.getElementById('minPrice').value;
 
-      maxPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
-    }
+    //   // Prevent the max price from being less than the min price
+    //   if (parseInt(value) < parseInt(minPrice)) {
+    //     value = minPrice;
+    //     document.getElementById('maxPrice').value = minPrice;
+    //   }
 
-    // Initialize default values
-    updateMinPriceValue(document.getElementById('minPrice').value);
-    updateMaxPriceValue(document.getElementById('maxPrice').value);
+    //   maxPriceLabel.textContent = `BDT ${parseInt(value).toLocaleString()}`;
+    // }
+
+    // // Initialize default values
+    // updateMinPriceValue(document.getElementById('minPrice').value);
+    // updateMaxPriceValue(document.getElementById('maxPrice').value);
   </script>
 </body>
 

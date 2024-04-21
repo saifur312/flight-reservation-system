@@ -24,7 +24,22 @@ class Flight
     $airline = $formData['airline'];
     $price = $formData['price'];
 
-    $insertQuery = "INSERT into flight(source, destination, departure, arrival, price, airline) values ('$source', '$destination', '$departure', '$arrival', '$price', '$airline')";
+    // Convert to DateTime objects
+    $departureDateTime = new DateTime($departure);
+    $arrivalDateTime = new DateTime($arrival);
+
+    // Calculate the difference
+    $interval = $departureDateTime->diff($arrivalDateTime);
+
+    // Format the interval in minutes
+    $minutes = $interval->days * 24 * 60; // Total days converted to minutes
+    $minutes += $interval->h * 60;        // Hours converted to minutes
+    $minutes += $interval->i;             // Minutes
+
+    echo "Duration in minutes: " . $minutes;
+
+
+    $insertQuery = "INSERT into flight(source, destination, departure, arrival, price, airline, duration) values ('$source', '$destination', '$departure', '$arrival', '$price', '$airline', '$minutes')";
 
     $savedData = $this->db->create($insertQuery);
 
@@ -69,8 +84,9 @@ class Flight
 
 
 
-  public function filterFlights($src, $dst, $dep, $arv = null, $minPrice = null, $maxPrice = null, $airlines = [])
+  public function filterFlights($src, $dst, $dep, $arv = null, $fastest = null, $minPrice = null, $maxPrice = null, $airlines = [])
   {
+    //echo "fastest param " . $fastest;
     //echo $src, $dst, $dep, $ret;
     /** search by source, destination, departure and arrival/return */
     // $selectQuery = "SELECT * FROM flight WHERE 
@@ -106,7 +122,10 @@ class Flight
       // Append to the select query
       $selectQuery .= " AND airline IN ($airlineQuery)";
     }
-
+    if ($fastest)
+      $selectQuery .= " ORDER BY duration";
+    else
+      $selectQuery .= " ORDER BY price";
     //echo $selectQuery;
 
     $flights = $this->db->select($selectQuery);
