@@ -239,7 +239,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
 
   <script>
     //countdown timer
-    var totalSeconds = .25 * 60; // 30 minutes in seconds
+    var totalSeconds = 5 * 60; // 30 minutes in seconds
     var timerInterval = setInterval(function() {
       totalSeconds -= 1;
       var minutes = Math.floor(totalSeconds / 60);

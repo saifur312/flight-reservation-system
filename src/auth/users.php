@@ -53,52 +53,72 @@ $data = $db->select($query);
 <!-- 
   write some html code to show table 
 -->
-<section>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">SL</th>
-        <th scope="col">Id</th>
-        <th scope="col">Username</th>
-        <th scope="col">Password</th>
-        <th scope="col">Role</th>
-        <th scope="col" colspan="2">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
+
+<body>
+  <div class="main-container d-flex">
+    <?php
+    include_once "../inc/sidebar.php";
+    ?>
+    <div class="content text-center">
       <?php
-      if ($data) {
-        $count = 1;
-        while ($row = $data->fetch_assoc()) {
+      include_once "../inc/navbar.php";
       ?>
-          <tr>
-            <th>
+
+      <div class="dashboard-content px-3 pt-4">
+        <h2 class="fs-5">Users</h2>
+
+        <section>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">SL</th>
+                <th scope="col">Id</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Role</th>
+                <th scope="col" colspan="2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
               <?php
-              /* echo array_search(
+              if ($data) {
+                $count = 1;
+                while ($row = $data->fetch_assoc()) {
+              ?>
+                  <tr>
+                    <th>
+                      <?php
+                      /* echo array_search(
                 $row,
                 array_keys($data->fetch_assoc())
               ); */
-              echo $count;
+                      echo $count;
+                      ?>
+                    </th>
+                    <th> <?php echo $row['id']; ?> </th>
+                    <td> <?php echo $row['username']; ?> </td>
+                    <td> <?php echo $row['password']; ?> </td>
+                    <td> <?php echo $row['role']; ?> </td>
+                    <td> <a href="update.php?id=<?php echo urlencode($row['id']); ?>">
+                        Edit</td>
+                    <td> <a href="update.php?id=<?php echo urlencode($row['id']); ?>">
+                        Delete</td>
+                  </tr>
+              <?php
+                  $count++;
+                }
+              }
               ?>
-            </th>
-            <th> <?php echo $row['id']; ?> </th>
-            <td> <?php echo $row['username']; ?> </td>
-            <td> <?php echo $row['password']; ?> </td>
-            <td> <?php echo $row['role']; ?> </td>
-            <td> <a href="update.php?id=<?php echo urlencode($row['id']); ?>">
-                Edit</td>
-            <td> <a href="update.php?id=<?php echo urlencode($row['id']); ?>">
-                Delete</td>
-          </tr>
-      <?php
-          $count++;
-        }
-      }
-      ?>
-    </tbody>
-  </table>
-</section>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </div>
 
-<?php
-require(__DIR__ . '/../inc/footer.php');
-?>
+  <?php
+  include_once "../inc/footer.php";
+  ?>
+</body>
+
+</html>

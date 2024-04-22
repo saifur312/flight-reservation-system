@@ -11,8 +11,13 @@ $user = new User();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
   //echo "Yaaah login posted";
   $userLogin = $user->userLogin($_POST);
+
   if ($userLogin) {
-    header("Location: ../../src/index.php");
+    $username = Session::get('username');
+    if ($username == 'admin')
+      header("Location: ../../src/admin.php");
+    else
+      header("Location: ../../src/index.php");
   }
 }
 

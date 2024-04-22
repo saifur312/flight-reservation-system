@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelTicket'])) {
             if ($flight) {
               //print_r($ticket['created_on']);
         ?>
-              <h4> No ticket found</h4>
+              <!-- <h4> No ticket found</h4> -->
 
               <div class=" card col-lg-9 text-center mt-4 " style=" min-height: 25vh;">
                 <div class="card-body row">
