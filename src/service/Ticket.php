@@ -110,7 +110,7 @@ class Ticket
 
   public function updateTicket($formData)
   {
-    print_r($formData);
+    //print_r($formData);
     $id = $formData['id'];
     $payment_id = $formData['payment_id'];
     $paid = $formData['paid'];

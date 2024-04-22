@@ -115,71 +115,119 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
           Launch demo modal
         </button> -->
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">
-                  <img src="<?php echo ROOT_URL; ?>../public/images/bkash.png" width="100px" height="80px">
-                </h5>
-                <h4> Pay with bKash</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form action="" method="post" class="row g-3">
-                  <input type="hidden" class="form-control" id="ticketId" name="ticketId" value="<?php echo $ticket['id']; ?>">
-                  <input type="hidden" class="form-control" id="method" name="method" value="bKash">
-                  <div class="row col-md-12">
-                    <label class="col-md-3 form-label">Ticket No:</label>
-                    <label class="col-md-3 form-label"><?php echo $ticket['id']; ?></label>
-                    <label class="col-md-3 form-label">Flight No:</label>
-                    <label class="col-md-3 form-label"><?php echo $flight['id']; ?></label>
-                    <label class="col-md-3 form-label">You Pay:</label>
-                    <label class="col-md-3 form-label"><?php echo $ticket['amount']; ?></label>
-                    <label class="col-md-3 form-label">Name:</label>
-                    <label class="col-md-3 form-label"><?php echo $username; ?></label>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="bkashNumber" class="form-label">Bkash Number</label>
-                    <input type="number" class="form-control" id="accountNo" name="accountNo">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="contact" class="form-label">Contact No</label>
-                    <input type="text" class="form-control" id="contact" name="contact">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="code" class="form-label">Verification Code</label>
-                    <input type="number" class="form-control" id="code" name="code">
-                  </div>
-                  <div class="col-md-6">
-                    <label for="pin" class="form-label">PIN</label>
-                    <input type="number" class="form-control" id="pin" name="pin">
-                  </div>
-                  <div class="col-12">
-                    <input type="submit" class="btn btn-lg btn-warning" name="payment" value="Pay" />
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="col-lg-3">
+        <div class="col-lg-12" style="background-color: #ffffff; padding: 12px;">
+          <div id="timer" class="text-start" style="background-color: #ECF3FE; padding-left: 16px;">
+            <i class="bi bi-clock-fill h2"></i>
+            <span class="fs-1" id="time" style="padding-left: 16px;">
+              05:00
+            </span>
+            <p style="padding-left: 70px; margin: 0px;"> min sec </p>
+          </div>
+        </div>
+
         <div class="card mt-4 ">
-          <div class="card-header">
-            Need Help
+          <div class="card-header text-start" style="background-color: #0E70A4; color: #ffffff;">
+            <h6> Need Help ?</h6>
           </div>
 
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Contact</li>
-            <li class="list-group-item">Message</li>
-            <li class="list-group-item">Email</li>
+          <ul class="list-group list-group-flush text-start mt-4">
+            <li class="list-group-item col-md-12" style="border: none">
+              <span class="row align-items-center">
+                <i class="bi bi-telephone-outbound-fill col-md-2 " style="font-size: 25px; color: orange;"></i>
+                <h6 class="col-md-8"> +880-1643833992 </h6>
+              </span>
+            </li>
+            <hr />
+            <li class="list-group-item col-md-12" style="border: none">
+              <span class="row align-items-center">
+                <i class="bi bi-envelope-check col-md-2" style="font-size: 25px; color: orange;"></i>
+                <h6 class="col-md-8"> admin@gamil.com </h6>
+              </span>
+            </li>
+            <hr />
+            <li class="list-group-item col-md-12" style="border: none">
+              <span class="row align-items-center">
+                <i class="bi bi-messenger col-md-2" style="font-size: 25px; color: orange;"></i>
+                <h6 class="col-md-8"> m.me/admin </h6>
+              </span>
+            </li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- payment Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            <img src="<?php echo ROOT_URL; ?>../public/images/bkash.png" width="100px" height="80px">
+          </h5>
+          <h4> Pay with bKash</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="post" class="row g-3">
+            <input type="hidden" class="form-control" id="ticketId" name="ticketId" value="<?php echo $ticket['id']; ?>">
+            <input type="hidden" class="form-control" id="method" name="method" value="bKash">
+            <div class="row col-md-12">
+              <label class="col-md-3 form-label">Ticket No:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['id']; ?></label>
+              <label class="col-md-3 form-label">Flight No:</label>
+              <label class="col-md-3 form-label"><?php echo $flight['id']; ?></label>
+              <label class="col-md-3 form-label">You Pay:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['amount']; ?></label>
+              <label class="col-md-3 form-label">Name:</label>
+              <label class="col-md-3 form-label"><?php echo $username; ?></label>
+            </div>
+            <div class="col-md-6">
+              <label for="bkashNumber" class="form-label">Bkash Number</label>
+              <input type="number" class="form-control" id="accountNo" name="accountNo">
+            </div>
+            <div class="col-md-6">
+              <label for="contact" class="form-label">Contact No</label>
+              <input type="text" class="form-control" id="contact" name="contact">
+            </div>
+            <div class="col-md-6">
+              <label for="code" class="form-label">Verification Code</label>
+              <input type="number" class="form-control" id="code" name="code">
+            </div>
+            <div class="col-md-6">
+              <label for="pin" class="form-label">PIN</label>
+              <input type="number" class="form-control" id="pin" name="pin">
+            </div>
+            <div class="col-12">
+              <input type="submit" class="btn btn-lg btn-warning" name="payment" value="Pay" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--Timeout Modal -->
+  <div class="modal fade" id="timeoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #0E70A4; color: #ffffff">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Session Expired
+          </h1>
+        </div>
+        <div class="modal-body text-center">
+          <h4><i class="bi bi-alarm-fill" style="font-size: 25px; color: navy;"></i></h4>
+          <h3> Sorry, your session has expired</h3>
+          <a href="payment.php?ticketId=<?php echo urlencode($ticket['id']); ?>" class="btn btn-lg btn-info mt-3">Try Again</a>
+
+          <a href="mybookings.php" class="btn btn-lg btn-warning mt-3">Back</a>
         </div>
       </div>
     </div>
@@ -187,6 +235,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
 
 
   <?php include "./inc/footer.php"; ?>
+
+
+  <script>
+    //countdown timer
+    var totalSeconds = .25 * 60; // 30 minutes in seconds
+    var timerInterval = setInterval(function() {
+      totalSeconds -= 1;
+      var minutes = Math.floor(totalSeconds / 60);
+      var seconds = totalSeconds % 60;
+      document.getElementById('time').textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+
+      if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        document.body.classList.add('modal-open'); // Add class to body to simulate the modal background
+        var myModal = new bootstrap.Modal(document.getElementById('timeoutModal'));
+        myModal.show();
+      }
+    }, 1000); // Run the function every 1 second
+  </script>
+
 </body>
 
 

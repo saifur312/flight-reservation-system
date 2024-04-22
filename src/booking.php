@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
-    header("refresh:3; url=mybooking.php");
+    header("refresh:3; url=mybookings.php");
     exit();
   } else {
     echo "
@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
           <div id="timer" class="text-start" style="background-color: #ECF3FE; padding-left: 16px;">
             <i class="bi bi-clock-fill h2"></i>
             <span class="fs-1" id="time" style="padding-left: 16px;">
-              30:00
+              05:00
             </span>
             <p style="padding-left: 70px; margin: 0px;"> min sec </p>
           </div>
@@ -306,7 +306,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
   <script>
     //countdown timer
-    var totalSeconds = .25 * 60; // 30 minutes in seconds
+    var totalSeconds = 5 * 60; // 30 minutes in seconds
     var timerInterval = setInterval(function() {
       totalSeconds -= 1;
       var minutes = Math.floor(totalSeconds / 60);

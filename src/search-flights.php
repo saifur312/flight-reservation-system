@@ -14,7 +14,8 @@ $al = new Airline();
 $airlines = $al->fetchAirlines();
 
 $showflights = false;
-$rowCount = null;
+$rowCount = 0;
+$filter = false;
 
 $flight = new Flight();
 
@@ -31,11 +32,16 @@ if (isset($_GET['source'])) {
     //echo "Fastest var " . $fastest;
   }
 
+  $filter = false;
   //echo "$src + $dst + $dep + $arv";
   $flights = $flight->filterFlights($src, $dst, $dep, $arv, urlencode($fastest));
 
   if ($flights) {
     $showflights = true;
+    $rowCount = $flights->num_rows;
+  } else {
+    $showflights = false;
+    $rowCount = 0;
   }
 }
 
@@ -61,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
   //print_r($_POST['minPrice']);
+  $filter = true;
 
   $flights = $flight->filterFlights(
     $_POST['source'],
@@ -77,12 +84,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
     //print_r($flights);
     // print_r($flights->fetch_assoc());
     $rowCount = $flights->num_rows;
+    $showflights = true;
+    //$filter = true;
 
     // while ($flight = $flights->fetch_assoc()) {
     //   print_r($flight);
     // }
     //print_r($rowCount);
+  } else {
+    $showflights = false;
+    //$filter = false;
+    $rowCount = 0;
   }
+
   //$showflights = true;
   //header("Location: search-flights.php");
 }
@@ -128,21 +142,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
     font-size: 0.875rem;
   }
 
-  #price-slider-round {
+  #price-slider-round,
+  #price-slider-round2,
+  #price-slider-round3 {
     height: 10px;
   }
 
-  #price-slider-round .noUi-connect {
-    /* background: #c0392b; */
+  #price-slider-round .noUi-connect,
+  #price-slider-round2 .noUi-connect,
+  #price-slider-round3 .noUi-connect {
     background: blue;
   }
 
-  #price-slider-round .noUi-handle {
+  #price-slider-round .noUi-handle,
+  #price-slider-round2 .noUi-handle,
+  #price-slider-round3 .noUi-handle {
     height: 18px;
     width: 18px;
     top: -5px;
     right: -9px;
-    /* half the width */
     border-radius: 9px;
   }
 </style>
@@ -274,20 +292,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Airports</button>
       </li>
-      <?php if ($rowCount) {
-        // Construct the URL
-        $removeFilterUrl = "search-flights.php?source=$src&destination=$dst&departure=$dep&arrival=$arv";
-
+      <?php if ($rowCount >= 0) {
         echo <<<HTML
                   <li style="width: 20%;" class="pt-2">
                     <strong> Showing $rowCount Results </Strong>
                   </li>
+                HTML;
+        if ($filter) {
+          // Construct the URL
+          $removeFilterUrl = "search-flights.php?source=$src&destination=$dst&departure=$dep&arrival=$arv";
+
+          echo <<<HTML
                   <li class="pt-2">
-                    <a class="btn btn-sm btn-light text-start" href="$removeFilterUrl">
+                    <a class="btn btn-sm btn-info text-start" href="$removeFilterUrl">
                       Remove Filter
                     </a>
                   </li>
                 HTML;
+        }
       }
       ?>
 
@@ -297,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       </div>
 
       <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-        <div class="row text-start pt-2">
+        <!-- <div class="row text-start pt-2">
           <div class="col-lg-3">
             <div class="col-lg-12">
               <div>
@@ -334,10 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
           </div>
 
-        </div>
-      </div>
-
-      <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        </div> -->
         <div class="pt-4 pb-4">
           <form id="filter-form" class="row " action="" method="post">
             <input type="hidden" id="source" name="source" value="<?php echo $src ?>">
@@ -394,6 +413,86 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                     Dubai Airways
                   </label>
                 </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Qatar Airways" id="airline4" name="airline[]">
+                  <label class=" form-check-label" for="airline4">
+                    Qatar Airways
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-lg-4 ">
+              <input type="submit" class="btn btn-lg btn-warning" name="filter" value="Apply Filter" />
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="pt-4 pb-4">
+          <form id="filter-form" class="row " action="" method="post">
+            <input type="hidden" id="source" name="source" value="<?php echo $src ?>">
+            <input type="hidden" id="destination" name="destination" value="<?php echo $dst ?>">
+            <input type="hidden" id="departure" name="departure" value="<?php echo $dep ?>">
+            <input type="hidden" id="arrival" name="arrival" value="<?php echo $arv ?>">
+
+            <div class="col-lg-4 text-start">
+              <div class="col-lg-12">
+                <div>
+                  <b> Fare Type </b>
+                </div>
+                <div class="form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+                </div>
+              </div>
+
+              <div class="col-lg-12 pt-2">
+                <label for="priceRange" class="form-label"><b>Price Range</b></label>
+                <div class="slider-container">
+                  <!-- <div id="price-slider"></div> -->
+                  <div class="slider-styled" id="price-slider-round2"></div>
+                  <div class="price-range-labels">
+                    <div id="price-lower"></div>
+                    <div id="price-upper"></div>
+                  </div>
+                </div>
+                <input type="hidden" id="minPrice" name="minPrice" value="2500">
+                <input type="hidden" id="maxPrice" name="maxPrice" value="35000">
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="col-lg-12">
+                <div>
+                  <b> Airlines </b>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Biman Bangladesh Airlines" id="airline1" name="airline[]">
+                  <label class="form-check-label col-lg-9" for="airline1">
+                    Biman Bangladesh Airlines
+                  </label>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="US Bangla" id="airline2" name="airline[]">
+                  <label class=" form-check-label" for="airline2">
+                    US Bangla
+                  </label>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Dubai Airways" id="airline3" name="airline[]">
+                  <label class=" form-check-label" for="airline3">
+                    Dubai Airways
+                  </label>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Qatar Airways" id="airline4" name="airline[]">
+                  <label class=" form-check-label" for="airline4">
+                    Qatar Airways
+                  </label>
+                </div>
 
               </div>
             </div>
@@ -406,7 +505,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
       </div>
 
       <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-        <div class="row text-start pt-2">
+        <div class="pt-4 pb-4">
+          <form id="filter-form" class="row " action="" method="post">
+            <input type="hidden" id="source" name="source" value="<?php echo $src ?>">
+            <input type="hidden" id="destination" name="destination" value="<?php echo $dst ?>">
+            <input type="hidden" id="departure" name="departure" value="<?php echo $dep ?>">
+            <input type="hidden" id="arrival" name="arrival" value="<?php echo $arv ?>">
+
+            <div class="col-lg-4 text-start">
+              <div class="col-lg-12">
+                <div>
+                  <b> Fare Type </b>
+                </div>
+                <div class="form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
+                </div>
+              </div>
+
+              <div class="col-lg-12 pt-2">
+                <label for="priceRange" class="form-label"><b>Price Range</b></label>
+                <div class="slider-container">
+                  <!-- <div id="price-slider"></div> -->
+                  <div class="slider-styled" id="price-slider-round3"></div>
+                  <div class="price-range-labels">
+                    <div id="price-lower"></div>
+                    <div id="price-upper"></div>
+                  </div>
+                </div>
+                <input type="hidden" id="minPrice" name="minPrice" value="2500">
+                <input type="hidden" id="maxPrice" name="maxPrice" value="35000">
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <div class="col-lg-12">
+                <div>
+                  <b> Airlines </b>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Biman Bangladesh Airlines" id="airline1" name="airline[]">
+                  <label class="form-check-label col-lg-9" for="airline1">
+                    Biman Bangladesh Airlines
+                  </label>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="US Bangla" id="airline2" name="airline[]">
+                  <label class=" form-check-label" for="airline2">
+                    US Bangla
+                  </label>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Dubai Airways" id="airline3" name="airline[]">
+                  <label class=" form-check-label" for="airline3">
+                    Dubai Airways
+                  </label>
+                </div>
+                <div class="form-check text-start">
+                  <input class="form-check-input" type="checkbox" value="Qatar Airways" id="airline4" name="airline[]">
+                  <label class=" form-check-label" for="airline4">
+                    Qatar Airways
+                  </label>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-lg-4 ">
+              <input type="submit" class="btn btn-lg btn-warning" name="filter" value="Apply Filter" />
+            </div>
+          </form>
+        </div>
+        <!-- <div class="row text-start pt-2">
           <div class="col-lg-3">
             <div class="col-lg-12">
               <div>
@@ -417,10 +587,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                 <label class="form-check-label" for="flexSwitchCheckDefault">Partially Refundable</label>
               </div>
             </div>
-            <!-- <div class="col-lg-12">
-              <label for="customRange2" class="form-label"><b> Price Range </b></label>
-              <input type="range" class="form-range" min="0" max="5" id="customRange2">
-            </div> -->
             <div class="col-lg-12">
               <label for="priceRange" class="form-label"><b>Price Range</b></label>
               <div class="dual-range-slider">
@@ -453,7 +619,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -500,7 +666,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
             while ($flight = $flights->fetch_assoc()) {
           ?>
               <div class=" card col-lg-12 text-center mt-4 " style=" min-height: 25vh;">
-
                 <div class="card-body row">
                   <div class="col-lg-3">
                     <div class="row align-items-center">
@@ -745,6 +910,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
 
     // Update the label when the slider value changes
     priceSlider.noUiSlider.on('update', function(values, handle) {
+      var value = values[handle];
+
+      if (handle) { // if it's the upper handle
+        document.getElementById('price-upper').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
+        document.getElementById('maxPrice').value = `${parseFloat(value)}`;
+      } else { // if it's the lower handle
+        document.getElementById('price-lower').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
+        document.getElementById('minPrice').value = `${parseFloat(value)}`;
+      }
+    });
+
+
+    //price slider 2
+    var priceSlider2 = document.getElementById('price-slider-round2');
+    noUiSlider.create(priceSlider2, {
+      start: [2500, 35000],
+      connect: true,
+      range: {
+        'min': 2500,
+        'max': 35000
+      },
+      step: 100
+    });
+
+    priceSlider2.noUiSlider.on('update', function(values, handle) {
+      var value = values[handle];
+
+      if (handle) { // if it's the upper handle
+        document.getElementById('price-upper').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
+        document.getElementById('maxPrice').value = `${parseFloat(value)}`;
+      } else { // if it's the lower handle
+        document.getElementById('price-lower').innerHTML = `BDT ${parseFloat(value).toLocaleString()}`;
+        document.getElementById('minPrice').value = `${parseFloat(value)}`;
+      }
+    });
+
+    //price slider 3
+    var priceSlider3 = document.getElementById('price-slider-round3');
+    noUiSlider.create(priceSlider3, {
+      start: [2500, 35000],
+      connect: true,
+      range: {
+        'min': 2500,
+        'max': 35000
+      },
+      step: 100
+    });
+
+    priceSlider3.noUiSlider.on('update', function(values, handle) {
       var value = values[handle];
 
       if (handle) { // if it's the upper handle
