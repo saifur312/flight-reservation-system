@@ -63,16 +63,9 @@
 </footer>
 
 
-<!-- jquery js -->
-<script src="<?php echo ROOT_URL; ?>libs/jquery/jquery-3.7.1.js"></script>
-<!-- Popperjs -->
-<script src="<?php echo ROOT_URL; ?>libs/bootstrap-5.3.3-dist/js/popper.min.js"></script>
-<!-- Bootstrap js  -->
-<script src="<?php echo ROOT_URL; ?>libs/bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
-<!-- sidebar scripts -->
-<script src="<?php echo ROOT_URL; ?>libs/codepen/sidebar.js"></script>
-<!-- select2 js -->
-<script src="<?php echo ROOT_URL; ?>libs/select2/select2.min.js"></script>
+<?php
+include_once 'footer-scripts.php';
+?>
 
 
 <script>
@@ -83,22 +76,7 @@
   $(document).ready(function() {
 
     // select2
-    $('.select2').select2();
-
-    $('#search-btn').on('click', function() {
-      event.preventDefault(); // Prevent the form from submitting
-      var source = encodeURIComponent($("[name='source']").val());
-      var destination = encodeURIComponent($("[name='destination']").val());
-      var departure = encodeURIComponent($("[name='departure']").val());
-      var arrival = encodeURIComponent($("[name='arrival']").val());
-
-      // Construct the URL with query parameters
-      var url = 'search-flights.php?source=' + source + '&destination=' + destination +
-        '&departure=' + departure + '&arrival=' + arrival;
-
-      // Redirect to the constructed URL
-      window.location.href = url;
-    });
+    //$('.select2').select2();
 
     // function updateMinPriceValue(value) {
     //   var minPriceLabel = document.getElementById('minPriceLabel');

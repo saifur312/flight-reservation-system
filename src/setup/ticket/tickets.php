@@ -9,56 +9,74 @@ $tickets = $ticket->fetchTickets();
 
 ?>
 
-<section class="mt-4">
-
-  <!-- <a class='btn btn-outline-primary' href="<?php echo ROOT_URL; ?>setup/ticket/add-ticket.php">Add New</a> -->
-  <table class="table mt-4">
-    <thead>
-      <tr>
-        <th scope="col">SL</th>
-        <th scope="col">Ticket Id</th>
-        <th scope="col">Flight Id</th>
-        <th scope="col">User Id</th>
-        <th scope="col">Adult</th>
-        <th scope="col">Child</th>
-        <th scope="col">Seat No</th>
-        <th scope="col">Amount</th>
-        <th scope="col" colspan="2">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
+<body>
+  <div class="main-container d-flex">
+    <?php
+    include_once "../../inc/sidebar.php";
+    ?>
+    <div class="content text-center">
       <?php
-      if ($tickets) {
-        $count = 1;
-        while ($ticket = $tickets->fetch_assoc()) {
+      include_once "../../inc/navbar.php";
       ?>
-          <tr>
-            <th>
+
+      <div class="dashboard-content px-3 pt-4">
+        <h2 class="fs-5">All Tickets</h2>
+
+        <section class="mt-4">
+          <!-- <a class='btn btn-outline-primary' href="<?php echo ROOT_URL; ?>setup/ticket/add-ticket.php">Add New</a> -->
+          <table class="table mt-4">
+            <thead>
+              <tr>
+                <th scope="col">SL</th>
+                <th scope="col">Ticket Id</th>
+                <th scope="col">Flight Id</th>
+                <th scope="col">User Id</th>
+                <th scope="col">Adult</th>
+                <th scope="col">Child</th>
+                <th scope="col">Seat No</th>
+                <th scope="col">Amount</th>
+                <th scope="col" colspan="2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
               <?php
-              echo $count;
+              if ($tickets) {
+                $count = 1;
+                while ($ticket = $tickets->fetch_assoc()) {
               ?>
-            </th>
-            <th> <?php echo $ticket['id']; ?> </th>
-            <td> <?php echo $ticket['flight_id']; ?> </td>
-            <td> <?php echo $ticket['user_id']; ?> </td>
-            <td> <?php echo $ticket['adult']; ?> </td>
-            <td> <?php echo $ticket['child']; ?> </td>
-            <td> <?php echo $ticket['seat_no']; ?> </td>
-            <td> <?php echo $ticket['amount']; ?> </td>
-            <td>
-              <a href="ticket-details.php?id=<?php echo urlencode($ticket['id']); ?>">
-                More
-            </td>
-          </tr>
-      <?php
-          $count++;
-        }
-      }
-      ?>
-    </tbody>
-  </table>
-</section>
+                  <tr>
+                    <th>
+                      <?php
+                      echo $count;
+                      ?>
+                    </th>
+                    <th> <?php echo $ticket['id']; ?> </th>
+                    <td> <?php echo $ticket['flight_id']; ?> </td>
+                    <td> <?php echo $ticket['user_id']; ?> </td>
+                    <td> <?php echo $ticket['adult']; ?> </td>
+                    <td> <?php echo $ticket['child']; ?> </td>
+                    <td> <?php echo $ticket['seat_no']; ?> </td>
+                    <td> <?php echo $ticket['amount']; ?> </td>
+                    <td>
+                      <a href="ticket-details.php?id=<?php echo urlencode($ticket['id']); ?>">
+                        More
+                    </td>
+                  </tr>
+              <?php
+                  $count++;
+                }
+              }
+              ?>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  </div>
 
-<?php
-require('../../inc/footer.php');
-?>
+  <?php
+  include_once "../../inc/footer-scripts.php";
+  ?>
+</body>
+
+</html>

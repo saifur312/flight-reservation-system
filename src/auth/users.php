@@ -22,7 +22,7 @@ require_once(__DIR__ . '/../db/database.php');
 <?php
 /** 
  * create an obj of Database class to access its members
- *  and store it into varaiable $db 
+ *  and store it into variable $db 
  */
 $db = new Database();
 
@@ -54,6 +54,10 @@ $data = $db->select($query);
   write some html code to show table 
 -->
 
+<head>
+  <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+</head>
+
 <body>
   <div class="main-container d-flex">
     <?php
@@ -67,7 +71,7 @@ $data = $db->select($query);
       <div class="dashboard-content px-3 pt-4">
         <h2 class="fs-5">Users</h2>
 
-        <section>
+        <!-- <section>
           <table class="table">
             <thead>
               <tr>
@@ -81,18 +85,14 @@ $data = $db->select($query);
             </thead>
             <tbody>
               <?php
-              if ($data) {
-                $count = 1;
-                while ($row = $data->fetch_assoc()) {
+              // if ($data) {
+              // $count = 1;
+              // while ($row = $data->fetch_assoc()) {
               ?>
                   <tr>
                     <th>
                       <?php
-                      /* echo array_search(
-                $row,
-                array_keys($data->fetch_assoc())
-              ); */
-                      echo $count;
+                      // echo $count;
                       ?>
                     </th>
                     <th> <?php echo $row['id']; ?> </th>
@@ -105,20 +105,72 @@ $data = $db->select($query);
                         Delete</td>
                   </tr>
               <?php
-                  $count++;
-                }
-              }
+              //     $count++;
+              //   }
+              // }
               ?>
             </tbody>
           </table>
-        </section>
+        </section> -->
+
+        <div id="userTable"></div>
+
       </div>
     </div>
   </div>
 
   <?php
-  include_once "../inc/footer.php";
+  // Fetch your data
+  $rows = [];
+  while ($row = $data->fetch_assoc()) {
+    //var_dump($row);
+    $rows[] = [
+      htmlspecialchars($row['id']),
+      htmlspecialchars($row['username']),
+      htmlspecialchars($row['password']),
+      htmlspecialchars($row['role']),
+      "<a href='update.php?id=" . urlencode($row['id']) . "'> <i class='bi bi-pen-fill' style='color:orange'></i></a>",
+      "<a href='delete.php?id=" . urlencode($row['id']) . "'><i class='bi bi-trash3-fill' style='color:red'></i></a>"
+    ];
+  }
+
+  //var_dump($rows);
   ?>
+
+
+  <?php
+  include_once "../inc/footer-scripts.php";
+  ?>
+
+  <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+
+  <script>
+    // Pass PHP array to JavaScript
+    var rowData = <?php echo json_encode($rows); ?>;
+
+    new gridjs.Grid({
+      // columns: ["ID", "Username", "Password", "Role", "Edit", "Delete"],
+      columns: ["ID", "Username", "Password", "Role",
+        {
+          name: "Edit",
+          formatter: (cell) => gridjs.html(cell) // Use the html formatter to parse HTML content
+        },
+        {
+          name: "Delete",
+          formatter: (cell) => gridjs.html(cell) // Use the html formatter to parse HTML content
+        }
+      ],
+      data: rowData,
+      search: true,
+      sort: true,
+      resizable: true,
+      pagination: {
+        limit: 5
+      }
+    }).render(document.getElementById("userTable"));
+  </script>
+
+
 </body>
 
 </html>

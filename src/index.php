@@ -318,9 +318,30 @@ $showflights = false;
   </div>
 
 
-
   <?php include "./inc/footer.php" ?>
 
+
+  <!-- page Scripts -->
+  <script>
+    $(document).ready(function() {
+
+      // search flights and redirect to searchflights.php with query parameteres
+      $('#search-btn').on('click', function() {
+        event.preventDefault(); // Prevent the form from submitting
+        var source = encodeURIComponent($("[name='source']").val());
+        var destination = encodeURIComponent($("[name='destination']").val());
+        var departure = encodeURIComponent($("[name='departure']").val());
+        var arrival = encodeURIComponent($("[name='arrival']").val());
+
+        // Construct the URL with query parameters
+        var url = 'search-flights.php?source=' + source + '&destination=' + destination +
+          '&departure=' + departure + '&arrival=' + arrival;
+
+        // Redirect to the constructed URL
+        window.location.href = url;
+      });
+    });
+  </script>
 
 </body>
 
