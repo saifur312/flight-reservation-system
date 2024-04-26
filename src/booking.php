@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 }
 
 
+$ap = new Airport();
+//$airports = $ap->fetchAirports();
 
 $showflights = false;
 
@@ -66,6 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
 ?>
 
+<style>
+  .nav-pills .nav-link.active,
+  .nav-pills .show>.nav-link {
+    color: #000;
+    background-color: #b0caf1;
+  }
+
+  .nav-pills .nav-link {
+    border-radius: 0;
+  }
+</style>
+
 
 <body class="text-center">
   <section class="text-center">
@@ -87,24 +101,179 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
           <div class="accordion-item">
             <h2 class="accordion-header" id="flush-FlightDetails1">
               <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFlightDetails1" aria-expanded="true" aria-controls="flush-collapseFlightDetails1">
-                DAC-COX
+                <?php
+                echo $ap->getCode($flight['source']);
+                echo " - ";
+                echo $ap->getCode($flight['destination']);
+                ?>
               </button>
             </h2>
             <div id="flush-collapseFlightDetails1" class="accordion-collapse collapse show" aria-labelledby="flush-FlightDetails1" data-bs-parent="#accordionFlightDetails1">
-              <div class="accordion-body">Flight Details</div>
+              <div class="accordion-body">
+
+                <div class="row align-items-center">
+                  <div class="col-lg-8">
+                    <div class="row text-start align-items-center">
+                      <div class="col-lg-3">
+                        <img src="<?php echo ROOT_URL; ?>../public/images/airplane2.jpg" width="80%" />
+                      </div>
+                      <div class="col-lg-8">
+                        <p>
+                          <?php
+                          echo $flight['airline'];
+                          ?>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 text-end">
+                    <p>Economy</p>
+                  </div>
+                </div>
+
+                <hr />
+
+                <div class="row ">
+                  <div class="col-lg-5 text-start">
+                    <p>
+                      <?php
+                      echo date('h:i A', strtotime($flight['departure']));
+                      echo "<br/>";
+                      echo date('l, d M, Y', strtotime($flight['departure']));
+                      echo "<br/>";
+                      echo $ap->getCode($flight['source']);
+                      ?>
+                    </p>
+                  </div>
+                  <div class="col-lg-2">
+                    <img src="../public/images/arrow-right.svg" style="width: 100px; height: 40%; opacity: .5" alt="Right Arrow">
+                    <p>
+                      <?php
+                      $duration = $flight['duration'];
+                      // Calculate days, hours, and minutes
+                      $days = intdiv($duration, 24 * 60);
+                      $hours = intdiv($duration % (24 * 60), 60);
+                      $minutes = $duration % 60;
+
+                      echo $days . "d " . $hours . "h " . $minutes . "m";
+                      ?>
+                    </p>
+
+
+                  </div>
+                  <div class="col-lg-5 text-end">
+                    <p>
+                      <?php
+                      echo date('h:i A', strtotime($flight['arrival']));
+                      echo "<br/>";
+                      echo date('l, d M, Y', strtotime($flight['arrival']));
+                      echo "<br/>";
+                      echo $ap->getCode($flight['destination']);
+                      ?>
+                    </p>
+                  </div>
+
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="accordion accordion-flush mt-4" id="accordionFlightDetails1">
+        <div class="accordion accordion-flush mt-4" id="accordionFlightDetails2">
           <div class="accordion-item">
             <h2 class="accordion-header" id="flush-FlightDetails2">
               <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFlightDetails2" aria-expanded="true" aria-controls="flush-collapseFlightDetails2">
                 Flight Details
               </button>
             </h2>
-            <div id="flush-collapseFlightDetails2" class="accordion-collapse collapse show" aria-labelledby="flush-FlightDetails2" data-bs-parent="#accordionFlightDetails1">
-              <div class="accordion-body">Flight Details</div>
+            <div id="flush-collapseFlightDetails2" class="accordion-collapse collapse show" aria-labelledby="flush-FlightDetails2" data-bs-parent="#accordionFlightDetails2">
+              <div class="accordion-body">
+                <div class="col-lg-12">
+                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="pills-baggage-tab" data-bs-toggle="pill" data-bs-target="#pills-baggage" type="button" role="tab" aria-controls="pills-baggage" aria-selected="true">Baggage</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="pills-fare-tab" data-bs-toggle="pill" data-bs-target="#pills-fare" type="button" role="tab" aria-controls="pills-fare" aria-selected="false">Fare</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="pills-policy-tab" data-bs-toggle="pill" data-bs-target="#pills-policy" type="button" role="tab" aria-controls="pills-policy" aria-selected="false">Policy</button>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-baggage" role="tabpanel" aria-labelledby="pills-baggage-tab" tabindex="0">
+                      <table class="col-lg-12 table table-borderless text-start">
+                        <tr>
+                          <th> Flight</th>
+                          <th> Cabin</th>
+                          <th> Check-in</th>
+                        </tr>
+                        <tr>
+                          <td>
+                            <p>
+                              <?php
+                              echo $ap->getCode($flight['source']);
+                              echo " - ";
+                              echo $ap->getCode($flight['destination']);
+                              ?>
+                            </p>
+                          </td>
+                          <td> 7 kg</td>
+                          <td> 20 kg</td>
+                        </tr>
+                      </table>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-fare" role="tabpanel" aria-labelledby="pills-fare-tab" tabindex="0">
+                      <table class="col-lg-12 table table-borderless text-start">
+                        <tr>
+                          <th> Fare Summary</th>
+                          <th> Base Fare</th>
+                          <th> Tax</th>
+                        </tr>
+                        <tr>
+                          <td> Adult X 1 </td>
+                          <td>
+                            <?php
+                            echo $flight['price'];
+                            ?>
+                          </td>
+                          <td>
+                            <?php
+                            echo $flight['price'] * 0.1;
+                            /** 10% tax */
+                            ?>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-policy" role="tabpanel" aria-labelledby="pills-policy-tab" tabindex="0">
+                      <div class="d-block p-2 bg-info text-white">
+                        <?php
+                        echo $ap->getCode($flight['source']);
+                        echo " - ";
+                        echo $ap->getCode($flight['destination']);
+                        ?>
+                      </div>
+                      <div class='row text-start mt-4'>
+                        <p>Tax & Amount</p>
+                        <hr />
+                        <p> Tax = 10% of Base Fair </p>
+                        <p> Total Amount = Base Amount + Tax</p>
+                        <p> Cancellation</p>
+                        <hr />
+                        <p> Cancellation Fee = Airline's Fee + ARS Fee
+                          Refund Amount = Paid Amount - Cancellation Fee</p>
+                      </div>
+
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -212,39 +381,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
           <div id="timer" class="text-start" style="background-color: #ECF3FE; padding-left: 16px;">
             <i class="bi bi-clock-fill h2"></i>
             <span class="fs-1" id="time" style="padding-left: 16px;">
-              05:00
+              15:00
             </span>
             <p style="padding-left: 70px; margin: 0px;"> min sec </p>
           </div>
         </div>
 
         <div class="card mt-4 ">
-          <div class="card-header text-start" style="background-color: #0E70A4; color: #ffffff;">
-            <h6> Need Help ?</h6>
+          <div class="card-header text-start">
+            <div class="row text-start align-items-center">
+              <div class="col-lg-3">
+                <img src="<?php echo ROOT_URL; ?>../public/images/airplane2.jpg" width="80%" />
+              </div>
+              <div class="col-lg-8">
+                Flight
+                <h6>
+                  <?php
+                  echo $ap->getCode($flight['source']);
+                  echo " - ";
+                  echo $ap->getCode($flight['destination']);
+                  ?>
+                </h6>
+              </div>
+            </div>
           </div>
 
-          <ul class="list-group list-group-flush text-start mt-4">
-            <li class="list-group-item col-md-12" style="border: none">
-              <span class="row align-items-center">
-                <i class="bi bi-telephone-outbound-fill col-md-2 " style="font-size: 25px; color: orange;"></i>
-                <h6 class="col-md-8"> +880-1643833992 </h6>
-              </span>
-            </li>
-            <hr />
-            <li class="list-group-item col-md-12" style="border: none">
-              <span class="row align-items-center">
-                <i class="bi bi-envelope-check col-md-2" style="font-size: 25px; color: orange;"></i>
-                <h6 class="col-md-8"> admin@gamil.com </h6>
-              </span>
-            </li>
-            <hr />
-            <li class="list-group-item col-md-12" style="border: none">
-              <span class="row align-items-center">
-                <i class="bi bi-messenger col-md-2" style="font-size: 25px; color: orange;"></i>
-                <h6 class="col-md-8"> m.me/admin </h6>
-              </span>
-            </li>
-          </ul>
+
+          <div class="accordion accordion-flush mt-4" id="accordionFareSummary">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="flush-headingFareSummary">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFareSummary" aria-expanded="true" aria-controls="flush-collapseFareSummary">
+                  Fare Summary
+                </button>
+              </h2>
+              <div id="flush-collapseFareSummary" class="accordion-collapse collapse show" aria-labelledby="flush-headingFareSummary" data-bs-parent="#accordionFareSummarys">
+                <div class="accordion-body">
+                  <div class="col-lg-12 text-start">
+                    <table class="col-lg-12 table table-borderless">
+                      <tr>
+                        <th> Summary</th>
+                        <th> Fare</th>
+                        <th> Tax</th>
+                      </tr>
+                      <tr>
+                        <td> Adult X 1 </td>
+                        <td>
+                          <?php
+                          echo $flight['price'];
+                          ?>
+                        </td>
+                        <td>
+                          <?php
+                          echo $flight['price'] * 0.1;
+                          /** 10% tax */
+                          ?>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -306,7 +504,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
   <script>
     //countdown timer
-    var totalSeconds = 5 * 60; // 30 minutes in seconds
+    var totalSeconds = 15 * 60; // 15 minutes in seconds
     var timerInterval = setInterval(function() {
       totalSeconds -= 1;
       var minutes = Math.floor(totalSeconds / 60);

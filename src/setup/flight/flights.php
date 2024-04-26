@@ -16,6 +16,10 @@ $flights = $flight->fetchFlights();
 
 ?>
 
+<head>
+  <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+</head>
+
 <body>
   <div class="main-container d-flex">
     <?php
@@ -29,65 +33,75 @@ $flights = $flight->fetchFlights();
       <div class="dashboard-content px-3 pt-4">
         <h2 class="fs-5">All Flights</h2>
 
-        <section class="mt-4">
+        <section class="mt-4 mb-4 pb-4">
 
-          <a class='btn btn-outline-primary' href="<?php echo ROOT_URL; ?>setup/flight/add-flight.php">Add New</a>
+          <a class='btn btn-outline-primary' href="<?php echo ROOT_URL; ?>setup/flight/add-flight.php">Add New Flight</a>
 
-          <table class="table mt-4">
-            <thead>
-              <tr>
-                <th scope="col">SL</th>
-                <th scope="col">Id</th>
-                <th scope="col">From</th>
-                <th scope="col">To</th>
-                <th scope="col">Departure</th>
-                <th scope="col">Arrival</th>
-                <th scope="col">Price</th>
-                <th scope="col">Airline</th>
-                <th scope="col" colspan="2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              if ($flights) {
-                $count = 1;
-                // Reset the internal pointer of the result set to the beginning
-                //$flights->data_seek(0);
-                while ($flight = $flights->fetch_assoc()) {
-              ?>
-                  <tr>
-                    <th>
-                      <?php
-                      echo $count;
-                      ?>
-                    </th>
-                    <th> <?php echo $flight['id']; ?> </th>
-                    <td> <?php echo $flight['source']; ?> </td>
-                    <td> <?php echo $flight['destination']; ?> </td>
-                    <td> <?php echo date('Y-m-d h:i A', strtotime($flight['departure'])); ?> </td>
-                    <td> <?php echo date('Y-m-d h:i A', strtotime($flight['arrival'])); ?> </td>
-                    <td> <?php echo $flight['price']; ?> </td>
-                    <td> <?php echo $flight['airline']; ?> </td>
-                    <td> <a href="update-flight.php?id=<?php echo urlencode($flight['id']); ?>">
-                        Edit</td>
-                    <td> <a href="update-flight.php?id=<?php echo urlencode($flight['id']); ?>">
-                        Delete</td>
-                  </tr>
-              <?php
-                  $count++;
-                }
-              }
-              ?>
-            </tbody>
-          </table>
+          <div id="flightsTable"></div>
         </section>
       </div>
     </div>
   </div>
 
   <?php
+  // Fetch your data
+  $rows = [];
+  while ($row = $flights->fetch_assoc()) {
+    $editLink = "<a href='update-flight.php?id=" . urlencode($row['id']) . "'> <i class='bi bi-pen-fill' style='color:orange'></i></a>";
+    $deleteLink = "<a href='#'><i class='bi bi-trash3-fill' style='color:red'></i></a>";
+
+    //var_dump($row);
+    $rows[] = [
+      htmlspecialchars($row['id']),
+      htmlspecialchars($row['source']),
+      htmlspecialchars($row['destination']),
+      htmlspecialchars(date('Y-m-d h:i A', strtotime($row['departure']))),
+      htmlspecialchars(date('Y-m-d h:i A', strtotime($row['arrival']))),
+      htmlspecialchars($row['price']),
+      htmlspecialchars($row['airline']),
+      $editLink . ' ' . $deleteLink  // Concatenate Edit and Delete links
+      // "<a href='update-flight.php?id=" . urlencode($row['id']) . "'> <i class='bi bi-pen-fill' style='color:orange'></i></a>",
+      // "<a href='#'><i class='bi bi-trash3-fill' style='color:red'></i></a>"
+    ];
+  }
+
+  //var_dump($rows);
+  ?>
+
+  <?php
   include_once "../../inc/footer-scripts.php";
   ?>
+
+  <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+
+  <script>
+    // Pass PHP array to JavaScript
+    var rowData = <?php echo json_encode($rows); ?>;
+
+    new gridjs.Grid({
+      columns: ["ID", "From", "To", "Departure", "Arrival", "Price", "Airline",
+        {
+          name: "Actions",
+          formatter: (cell) => gridjs.html(cell) // Parse HTML content for combined actions
+        }
+        // {
+        //   name: "Edit",
+        //   formatter: (cell) => gridjs.html(cell) // Use the html formatter to parse HTML content
+        // },
+        // {
+        //   name: "Delete",
+        //   formatter: (cell) => gridjs.html(cell) // Use the html formatter to parse HTML content
+        // }
+      ],
+      data: rowData,
+      search: true,
+      sort: true,
+      resizable: true,
+      pagination: {
+        limit: 5
+      }
+    }).render(document.getElementById("flightsTable"));
+  </script>
 </body>
 
 </html>

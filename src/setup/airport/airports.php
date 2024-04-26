@@ -25,8 +25,13 @@ $airports = $airport->fetchAirports();
         <h2 class="fs-5">All Airports</h2>
 
 
+        <section class="mt-4 mb-4 pb-4">
 
-        <div id="airportTable"></div>
+          <a class='btn btn-outline-primary' href="<?php echo ROOT_URL; ?>setup/airport/add-airport.php">Add New Airport</a>
+
+          <div id="airportsTable"></div>
+        </section>
+
       </div>
     </div>
   </div>
@@ -80,7 +85,7 @@ $airports = $airport->fetchAirports();
       pagination: {
         limit: 5
       }
-    }).render(document.getElementById("airportTable"));
+    }).render(document.getElementById("airportsTable"));
   </script>
 </body>
 

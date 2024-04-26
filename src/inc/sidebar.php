@@ -38,7 +38,9 @@
 
   <ul class="list-unstyled px-2">
     <li class="<?php echo (basename($_SERVER['PHP_SELF']) == 'index.php') ? 'active' : ''; ?>">
-      <a href="<?php echo ROOT_URL; ?>index.php" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-list"></i> View As Visitors</a>
+      <a href="<?php echo ROOT_URL; ?>index.php" class="text-decoration-none px-3 py-2 d-block">
+        <i class="bi bi-eye-fill"></i> View As Visitors
+      </a>
     </li>
   </ul>
 </div>

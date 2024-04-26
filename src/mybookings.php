@@ -83,6 +83,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
     pointer-events: none;
     color: #ccc;
   }
+
+  p {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+
+  .nav-pills .nav-link.active,
+  .nav-pills .show>.nav-link {
+    color: #000;
+    background-color: #b0caf1;
+  }
+
+  .nav-pills .nav-link {
+    border-radius: 0;
+  }
 </style>
 
 
@@ -125,18 +140,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
             if ($flight) {
               //print_r($ticket['created_on']);
         ?>
-              <div class=" card col-lg-9 text-center mt-4 " style=" min-height: 25vh;">
-                <div class="card-body row">
+              <div class="card col-lg-9 text-center mt-4 " style=" min-height: 25vh;">
+                <div class="card-body row pt-4">
                   <div class="col-lg-3">
                     <div class="row align-items-center">
-                      <div class="col-lg-4" style="padding: 0;">
+                      <div class="col-lg-3" style="padding: 0;">
                         <img src="<?php echo ROOT_URL; ?>../public/images/airplane2.jpg" width="100%" height="auto" />
                       </div>
-                      <div class="col-lg-8">
+                      <p class="col-lg-8">
                         <?php
                         echo $flight['airline'];
                         ?>
-                      </div>
+                      </p>
                     </div>
                   </div>
                   <div class="col-lg-7">
@@ -176,29 +191,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                           $days = intdiv($duration, 24 * 60);
                           $hours = intdiv($duration % (24 * 60), 60);
                           $minutes = $duration % 60;
+
                           echo $days . "d " . $hours . "h " . $minutes . "m";
                           ?>
                         </p>
                       </div>
                     </div>
                   </div>
-                  <!-- Select Flight -->
-                  <div class="col-lg-2">
+                  <div class="col-lg-2 ">
                     <div class="row justify-content-center">
                       <p>
                         <?php echo "Flight  " . $flight['id'];
                         ?>
                       </p>
-                      <div class="col-lg-12">
+                      <h5 class="col-lg-12">
                         <?php echo "BDT  " . $flight['price'];
                         ?>
-                      </div>
-
-                      <!-- <a href="booking.php?id=<?php echo $flight['id'] ?>" class="btn btn-warning col-lg-8">Select</a> -->
+                      </h5>
                     </div>
                   </div>
                   <!-- Flight Details -->
-                  <div class="accordion mt-1" id="accordionExample<?php echo $count ?>">
+                  <div class="accordion mt-4" id="accordionExample<?php echo $count ?>">
                     <div class="accordion-item">
                       <h2 class="accordion-header" id="headingOne<?php echo $count ?>">
                         <button class="accordion-button collapsed  text-end" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne<?php echo $count ?>" aria-expanded="false" aria-controls="collapseOne<?php echo $count ?>">
@@ -208,19 +221,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                       <div id="collapseOne<?php echo $count ?>" class="accordion-collapse collapse" aria-labelledby="headingOne<?php echo $count ?>" data-bs-parent="#accordionExample<?php echo $count ?>">
                         <div class="accordion-body">
                           <div class="row">
-                            <div class="col-lg-6">
-                              <button class="btn btn-primary">
+                            <div class="col-lg-6" style="border-right: solid thin #eeeeee;">
+                              <p>
                                 <?php
                                 echo $ap->getCode($flight['source']);
                                 echo " - ";
                                 echo $ap->getCode($flight['destination']);
                                 ?>
-                              </button>
-                              <div class="row">
+                              </p>
+                              <div class="row align-items-center">
                                 <div class="col-lg-8">
                                   <div class="row text-start align-items-center">
-                                    <div class="col-lg-4">
-                                      <img src="<?php echo ROOT_URL; ?>../public/images/airplane2.jpg" width="100%" />
+                                    <div class="col-lg-3">
+                                      <img src="<?php echo ROOT_URL; ?>../public/images/airplane2.jpg" width="80%" />
                                     </div>
                                     <div class="col-lg-8">
                                       <p>
@@ -232,9 +245,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                                   </div>
                                 </div>
                                 <div class="col-lg-4 text-end">
-                                  Economy
+                                  <p>Economy</p>
                                 </div>
-                                <hr>
+                              </div>
+
+                              <hr />
+
+                              <div class="row ">
+                                <div class="col-lg-4 text-start">
+                                  <p>
+                                    <?php
+                                    echo date('h:i A', strtotime($flight['departure']));
+                                    echo "<br/>";
+                                    echo date('l, d M, Y', strtotime($flight['departure']));
+                                    echo "<br/>";
+                                    echo $ap->getCode($flight['source']);
+                                    ?>
+                                  </p>
+                                </div>
+                                <div class="col-lg-4">
+                                  <img src="../public/images/arrow-right.svg" style="width: 100px; height: 60%; opacity: .5" alt="Right Arrow">
+
+
+                                </div>
+                                <div class="col-lg-4 text-end">
+                                  <p>
+                                    <?php
+                                    echo date('h:i A', strtotime($flight['arrival']));
+                                    echo "<br/>";
+                                    echo date('l, d M, Y', strtotime($flight['arrival']));
+                                    echo "<br/>";
+                                    echo $ap->getCode($flight['destination']);
+                                    ?>
+                                  </p>
+                                </div>
+
                               </div>
                             </div>
                             <!-- Baggage, Fare, Policy -->
@@ -252,12 +297,110 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                               </ul>
                               <div class="tab-content" id="pills-tabContent<?php echo $count ?>">
                                 <div class="tab-pane fade show active" id="pills-baggage<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-baggage-tab<?php echo $count ?>" tabindex="0">
-                                  Baggage
+                                  <table class="col-lg-12 table table-borderless">
+                                    <tr>
+                                      <th> Flight</th>
+                                      <th> Cabin</th>
+                                      <th> Check-in</th>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <p>
+                                          <?php
+                                          echo $ap->getCode($flight['source']);
+                                          echo " - ";
+                                          echo $ap->getCode($flight['destination']);
+                                          ?>
+                                        </p>
+                                      </td>
+                                      <td> 7 kg</td>
+                                      <td> 20 kg</td>
+                                    </tr>
+                                  </table>
+
+                                  <div class='row rounded-0 alert alert-primary show mt-4' role='alert'>
+                                    <div class="col-md-6 text-start"> Total (1 Traveler)</div>
+                                    <div class="col-md-6 text-end">
+                                      <b>
+                                        <?php
+                                        $tax = $flight['price'] * 0.1;
+                                        echo "BDT " . $flight['price'] + $tax;
+                                        ?>
+                                      </b>
+                                    </div>
+                                  </div>
                                 </div>
-                                <div class="tab-pane fade" id="pills-fare<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-fare-tab<?php echo $count ?>" tabindex="0">Fare</div>
-                                <div class="tab-pane fade" id="pills-policy<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-policy-tab<?php echo $count ?>" tabindex="0">Policy</div>
+                                <div class="tab-pane fade" id="pills-fare<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-fare-tab<?php echo $count ?>" tabindex="0">
+
+                                  <table class="col-lg-12 table table-borderless">
+                                    <tr>
+                                      <th> Fare Summary</th>
+                                      <th> Base Fare</th>
+                                      <th> Tax</th>
+                                    </tr>
+                                    <tr>
+                                      <td> Adult X 1 </td>
+                                      <td>
+                                        <?php
+                                        echo $flight['price'];
+                                        ?>
+                                      </td>
+                                      <td>
+                                        <?php
+                                        echo $flight['price'] * 0.1;
+                                        /** 10% tax */
+                                        ?>
+                                      </td>
+                                    </tr>
+                                  </table>
+
+                                  <div class='row rounded-0 alert alert-primary show mt-4'>
+                                    <div class="col-md-6 text-start"> Total (1 Traveler)</div>
+                                    <div class="col-md-6 text-end">
+                                      <b>
+                                        <?php
+                                        $tax = $flight['price'] * 0.1;
+                                        echo "BDT " . $flight['price'] + $tax;
+                                        ?>
+                                      </b>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-policy<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-policy-tab<?php echo $count ?>" tabindex="0">
+                                  <div class="d-block p-2 bg-info text-white">
+                                    <?php
+                                    echo $ap->getCode($flight['source']);
+                                    echo " - ";
+                                    echo $ap->getCode($flight['destination']);
+                                    ?>
+                                  </div>
+                                  <div class='row text-start mt-4'>
+                                    <p>Tax & Amount</p>
+                                    <hr />
+                                    <p> Tax = 10% of Base Fair </p>
+                                    <p> Total Amount = Base Amount + Tax</p>
+                                    <p> Cancellation</p>
+                                    <hr />
+                                    <p> Cancellation Fee = Airline's Fee + ARS Fee
+                                      Refund Amount = Paid Amount - Cancellation Fee</p>
+                                  </div>
+
+                                  <div class='row rounded-0 alert alert-primary show mt-4'>
+                                    <div class="col-md-6 text-start"> Total (1 Traveler)</div>
+                                    <div class="col-md-6 text-end">
+                                      <b>
+                                        <?php
+                                        $tax = $flight['price'] * 0.1;
+                                        echo "BDT " . $flight['price'] + $tax;
+                                        ?>
+                                      </b>
+                                    </div>
+                                  </div>
+
+                                </div>
                               </div>
                             </div>
+
                           </div>
                         </div>
                       </div>
@@ -265,6 +408,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                   </div>
                 </div>
               </div>
+
+
 
               <?php
               date_default_timezone_set('Asia/Dhaka'); // Replace with local time zone
