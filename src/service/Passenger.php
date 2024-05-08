@@ -17,6 +17,7 @@ class Passenger
   public function savePassenger($formData)
   {
     //print_r($formData);
+    $passengerId = $formData['passengerId'];
     $flightId = $formData['flightId'];
     $userId = $formData['userId'];
     $firstName = $formData['firstName'];
@@ -25,15 +26,19 @@ class Passenger
     $passport = $formData['passport'];
     $email = $formData['email'];
     $contact = $formData['contact'];
+    
+    $savedPassenger = array();
 
-    $insertQuery = "INSERT into passenger(user_id, first_name, last_name, nationality, passport, email, contact) values ('$userId', '$firstName', '$lastName', '$nationality', '$passport', '$email', '$contact')";
+    if (empty($passengerId)) {
+      // Handle the case where $passengerId is empty or null
+      $insertQuery = "INSERT into passenger(user_id, first_name, last_name, nationality, passport, email, contact) 
+                      values ('$userId', '$firstName', '$lastName', '$nationality', '$passport', '$email', '$contact')";
+      $savedPassengerId = $this->db->create($insertQuery);
 
-    $savedData = $this->db->create($insertQuery);
-
-    if ($savedData) {
+    if ($savedPassengerId) {
       // Retrieve the last inserted ID
       //$passengerId = $this->db->connection->insert_id;
-      $savedPassenger = $this->fetchPassenger($savedData)->fetch_assoc();
+      $savedPassenger = $this->fetchPassenger($savedPassengerId)->fetch_assoc();
       // print_r($savedPassenger);
       // print_r($savedPassenger['id']);
       // insert data into booking table
@@ -51,13 +56,20 @@ class Passenger
       // $savedBooking = $booking->saveBooking($bookingData);
       // return array_merge($savedPassenger, $savedBooking);
 
-      //save ticket
-      $ticket = new Ticket();
-      $savedTicket = $ticket->saveTicket($formData);
-      return array_merge($savedPassenger, $savedTicket);
+      
+    } 
     } else {
-      return null;
+        $passengerId = (int) $passengerId; // Now it's an integer
+        //var_dump($passengerId); // Outputs: int(1)
+        //update passenger Id String into int
+        $formData["passengerId"] = $passengerId;
     }
+    //save ticket
+    $ticket = new Ticket();
+    $savedTicket = $ticket->saveTicket($formData);
+
+    return array_merge($savedPassenger, $savedTicket);
+
   }
 
   public function fetchPassengers()

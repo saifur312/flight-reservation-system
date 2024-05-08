@@ -6,18 +6,21 @@ include_once __DIR__ . '/../service/Session.php';
 include "../service/User.php";
 
 //Session::checkSession();
-
+$loginMessege = null;
 $user = new User();
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
   //echo "Yaaah login posted";
   $userLogin = $user->userLogin($_POST);
 
-  if ($userLogin) {
+  if ($userLogin != null) {
     $username = Session::get('username');
     if ($username == 'admin')
       header("Location: ../../src/admin.php");
     else
       header("Location: ../../src/index.php");
+  }
+  else{
+    $loginMessege = 'Invalid Username or password ';
   }
 }
 
@@ -44,6 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
           <h2>Login to safely fly with us</h2>
         </div>
         <div class="col-lg-5 mt-4">
+
+          <?php 
+            if($loginMessege != null){
+              echo <<<HTML
+              <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
+                $loginMessege
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+                </button>
+              </div>
+              HTML;
+          }
+          ?>
           <form action="" method="post" class="mt-4 ">
             <div class="row align-items-center mb-4">
               <div class="col-4">

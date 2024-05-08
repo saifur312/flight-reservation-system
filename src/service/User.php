@@ -10,6 +10,61 @@ class User
     $this->db = new Database();
   }
 
+  public function userSignup($formData){
+    // var_dump($formData);
+    $username = mysqli_real_escape_string($this->db->connection, $formData['username']);
+    $email = mysqli_real_escape_string($this->db->connection, $formData['email']);
+    $pass = mysqli_real_escape_string($this->db->connection, $formData['password']);
+
+    $insertQuery = "INSERT INTO user(username, password, email) 
+                      VALUES('$username', '$pass', '$email')";
+
+    $insertedUserId = $this->db->create($insertQuery);
+
+    if ($insertedUserId) {
+      $savedUser = $this->fetchUser($insertedUserId);
+      return $savedUser;
+    }
+    else
+      return null;
+  }
+
+  public function validateSignupForm($formData){
+    $username = mysqli_real_escape_string($this->db->connection, $formData['username']);
+    $email = mysqli_real_escape_string($this->db->connection, $formData['email']);
+    $pass = mysqli_real_escape_string($this->db->connection, $formData['password']);
+    $confirmPass = mysqli_real_escape_string($this->db->connection, $formData['confirmPassword']);
+  
+    $message = null;
+
+    // Check for empty fields
+    if ($username == '' || $pass == '' || $email == '') {
+      //echo "<h3 style='color:red'>Fields should not be empty..!!! </h3>";
+      $message = 'Fields should not be empty..!!!';
+    }
+  
+    // Check if passwords match
+    if ($pass != $confirmPass) {
+      //echo "<h3 style='color:red'>Password does not match..!!! </h3>";
+      $message = 'Password does not match..!!! ';
+    }
+  
+    // Check for password length
+    if (strlen($pass) < 8) {
+      //echo "<h3 style='color:red'>Password must be at least 8 characters long..!!! </h3>";
+      $message = 'Password must be at least 8 characters long..!!! ';
+    }
+  
+    // Check for the presence of special characters
+    if (!preg_match('/^[a-zA-Z0-9]*$/', $pass)) {
+      //echo "<h3 style='color:red'>Password should not contain special characters..!!! </h3>";
+      $message = 'Password should not contain special characters..!!!';
+    }
+
+    return $message;
+  }
+
+
   public function userLogin($formData)
   {
     $username = $formData['username'];
@@ -31,7 +86,9 @@ class User
       //exit;
       return $user;
     } else {
-      echo "<div class='alert alert-danger alert-dismissible fade show' role='alert '> Invalid Username or password </div>";
+      //echo "<div class='alert alert-danger alert-dismissible fade show' role='alert '> Invalid Username or password </div>";
+      //Session::set("loginmsg", "<div class='alert alert-danger alert-dismissible fade show' role='alert '> Invalid Username or password </div>");
+      return $user;
     }
   }
 

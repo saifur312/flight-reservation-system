@@ -29,7 +29,7 @@ if (isset($_GET['ticketId'])) {
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
-  print_r($_POST);
+  //print_r($_POST);
 
   $p = new Payment();
   $savedPayment = $p->savePayment($_POST);
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
-    header("refresh:3; url=mybooking.php");
+    header("refresh:1; url=mytickets.php");
     exit();
   } else {
     echo "

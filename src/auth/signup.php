@@ -9,54 +9,40 @@
 //require(__DIR__ . '/../inc/header.php');
 require_once(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/../db/database.php');
+require_once(__DIR__ . '/../service/User.php');
 
 ?>
 
 
 
 <?php
+
+/** 
+ * If we write put values without quote '' inside query 
+ * then it will show following error
+ * Fatal error: Uncaught mysqli_sql_exception: 
+ * Unknown column 'first_column_value' in 'field list' 
+ *** 
+ * $insertQuery = "INSERT INTO user(username, password, role) 
+ * VALUES($username, $pass, $role)"; 
+ */
 /** 
  * create an obj of Database class to access its members
  * and store it into variable $db 
  */
 $db = new Database();
+$user = new User();
+$validateMessage = null;
 
 if (isset($_POST['submit'])) {
-  $username = mysqli_real_escape_string($db->connection, $_POST['username']);
-  $email = mysqli_real_escape_string($db->connection, $_POST['email']);
-  $pass = mysqli_real_escape_string($db->connection, $_POST['password']);
-  $confirmPass = mysqli_real_escape_string($db->connection, $_POST['confirmPassword']);
-  //$role = mysqli_real_escape_string($db->connection, $_POST['role']);
-
-  //echo $username . "  " . $pass . "   " . $role;
-  if ($username == '' || $pass == '' || $email == '')
-    echo "<h3 style='color:red'>Fields should not be empty..!!! </h3>";
-  if ($pass != $confirmPass)
-    echo "<h3 style='color:red'>Password does not match..!!! </h3>";
+  $validateMessage = $user->validateSignupForm($_POST);
+  //echo $validateMessage;
+  if($validateMessage != null){
+    //echo "<h3 style='color:red'> $validateMessage </h3>";
+  }
   else {
-
-    /** 
-     * writing insert query that we want to execute 
-     */
-
-    /** 
-     * If we write put values without quote '' inside query 
-     * then it will show following error
-     * Fatal error: Uncaught mysqli_sql_exception: 
-     * Unknown column 'first_column_value' in 'field list' 
-     *** 
-     * $insertQuery = "INSERT INTO user(username, password, role) 
-     * VALUES($username, $pass, $role)"; 
-     */
-
-    $insertQuery = "INSERT INTO user(username, password, email) 
-    VALUES('$username', '$pass', '$email')";
-
-
-    /** 
-     * call insert() method to execute query and stores the result into var
-     */
-    $insertedData = $db->create($insertQuery);
+    $insertedData = $user->userSignup($_POST);
+    //var_dump($insertedData);
     if ($insertedData) {
       echo "
       <div class='alert alert-success alert-dismissible fade show' role='alert'> 
@@ -64,7 +50,7 @@ if (isset($_POST['submit'])) {
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
-      header("refresh:2; url=login.php");
+      header("refresh:4; url=login.php");
     }
   }
 }
@@ -87,10 +73,19 @@ if (isset($_POST['submit'])) {
   </div>
   <section class="container text-center mb-4">
     <div class="row justify-content-center ">
-      <div class="card mt-4">
+      <div class="card col-lg-6 mt-4">
         <form action="" method="post" class="mt-4 card-body row">
-
-          <div class="col-lg-6 " style="border-right: solid thin black">
+          <?php 
+          if($validateMessage != null){
+            echo <<<HTML
+            <div class='alert alert-danger alert-dismissible fade show' role='alert'> 
+              $validateMessage
+              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
+              </button>
+            </div>
+            HTML;
+        }
+          ?>
 
             <div class="row align-items-center mb-4">
               <div class="col-4">
@@ -128,7 +123,11 @@ if (isset($_POST['submit'])) {
               </div>
             </div>
 
-          </div>
+            <div class="col-lg-12 mt-4">
+              <input type="submit" class="btn btn-lg btn-outline-primary col-lg-4" name="submit" value="submit" />
+              <input type="reset" class="btn btn-lg btn-outline-danger col-lg-4" value="Cancel" />
+            </div>
+
 
           <!-- <div class="col-lg-6">
           <div class="row align-items-center mb-4">
@@ -177,11 +176,6 @@ if (isset($_POST['submit'])) {
           </div>
 
         </div> -->
-
-          <div class="col-lg-12 mt-4">
-            <input type="submit" class="btn btn-lg btn-outline-primary col-lg-4" name="submit" value="submit" />
-            <input type="reset" class="btn btn-lg btn-outline-danger col-lg-4" value="Cancel" />
-          </div>
         </form>
       </div>
     </div>

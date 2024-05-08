@@ -14,13 +14,33 @@ include_once "./service/Passenger.php";
 
 // login
 $user = new User();
+$passenger = new Passenger();
+
+$savedPassengers = $passenger->fetchPassengers();
+
+
+// if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+//   //echo "Yaaah login posted";
+//   $userLogin = $user->userLogin($_POST);
+//   // if ($userLogin) {
+//   //   header("Location: booking.php");
+//   // }
+// }
+
+$loginMessage = null;  // Initialize the login message
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-  //echo "Yaaah login posted";
   $userLogin = $user->userLogin($_POST);
   // if ($userLogin) {
   //   header("Location: booking.php");
+  //   exit;
+  // } else {
+  //   $loginMessage = "Invalid username or password.";
   // }
+  if($userLogin == null)
+    $loginMessage = "Invalid username or password.";
+
 }
+
 
 
 $ap = new Airport();
@@ -40,11 +60,11 @@ if (isset($_GET['id'])) {
 /** Save passenger and booking details */
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
-  // print_r($_POST);
+  //print_r($_POST);
   // $_POST["passengerId"] = 1000;
   // print_r($_POST);
 
-  $passenger = new Passenger();
+  //$passenger = new Passenger();
   $savedData = $passenger->savePassenger($_POST);
   if ($savedData) {
     //print_r($savedData);
@@ -54,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
         <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'>
         </button>
       </div>";
-    header("refresh:3; url=mybookings.php");
+    header("refresh:1; url=mybookings.php");
     exit();
   } else {
     echo "
@@ -287,13 +307,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
             </h2>
             <div id="flush-collapseTravelerDetails" class="accordion-collapse collapse show" aria-labelledby="flush-headingTravelerDetails" data-bs-parent="#accordionTravelerDetails">
               <div class="accordion-body">
+
+                <div class="row col-lg-12 text-start mt-2 mb-4">
+                  <div class="col-4 text-start">
+                    <label for="source" class="col-form-label">Select from saved Passengers </label>
+                  </div>
+                  <div class="col-6 text-start">
+                    <select class="form-select form-select-lg mb-3 select2" aria-label=".form-select-lg" name="passengers" onchange="fillPassengerData()" required>
+                      <option>Select One</option>
+                      <?php
+                      if ($savedPassengers) {
+                        while ($passenger = $savedPassengers->fetch_assoc()) {
+                          echo <<<HTML
+                            <option 
+                              value="{$passenger['id']}"
+                              data-passengerId="{$passenger['id']}"
+                              data-firstname="{$passenger['first_name']}"
+                              data-lastname="{$passenger['last_name']}"
+                              data-passport="{$passenger['passport']}"
+                              data-nationality="{$passenger['nationality']}"
+                              data-email="{$passenger['email']}"
+                              data-contact="{$passenger['contact']}"
+                            >
+                              {$passenger['first_name']} {$passenger['last_name']} - {$passenger['passport']}
+                            </option>
+                          HTML;
+                        }
+                      }
+                      ?>
+                    </select>
+
+                  </div>
+                </div>
+
                 <div class="col-lg-12 text-start">
                   <form action="" method="post" class="row g-3">
 
                     <input type="hidden" class="form-control" id="userId" name="userId" value="<?php echo $userId ?>" required>
-
                     <input type="hidden" class="form-control" id="flightId" name="flightId" value="<?php echo $flight['id'] ?>" required>
-
+                    <input type="hidden" class="form-control" id="passengerId" name="passengerId" required>
+                    <div class="col-md-12" >
+                      <label for="firstName" class="form-label">First Name</label>
+                      <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    </div>
                     <div class="col-md-6">
                       <label for="firstName" class="form-label">First Name</label>
                       <input type="text" class="form-control" id="firstName" name="firstName" required>
@@ -360,7 +416,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
                             HTML;
                       } else {
                         echo <<<HTML
-                              <a href="#" class="btn btn-warning col-lg-8" data-bs-toggle="modal" data-bs-target="#exampleModal">Login to Continue</a>
+                              <!-- <a href="#" class="btn btn-warning col-lg-8" data-bs-toggle="modal" data-bs-target="#loginModal">Login to Continue</a> -->
+                              <a href="#" class="btn btn-warning col-lg-8" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="storeFormData()">Login to Continue</a>
+
                             HTML;
                       }
                       ?>
@@ -449,17 +507,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
   </div>
 
   <!--Login Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
+          <h5 class="modal-title" id="loginModalLabel">
             <img src="<?php echo ROOT_URL; ?>../public/images/logo.png" width="100px" height="80px">
           </h5>
           <h4>Login to Book Ticket</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <?php if ($loginMessage != null): ?>
+            <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+              <?php echo $loginMessage; ?>
+              <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>
+          <?php endif; ?>
+        
           <form action="" method="post" class="row g-3">
             <div class="col-md-6">
               <label for="username" class="form-label">Username</label>
@@ -467,10 +532,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
             </div>
             <div class="col-md-6">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" name="password">
+              <input type="text" class="form-control" id="password" name="password">
             </div>
             <div class="col-12">
               <input type="submit" class="btn btn-lg btn-warning" name="login" value="Login" />
+                      
+              <input type="submit" class="btn btn-lg btn-primary" name="signup" value="signup" />
             </div>
           </form>
         </div>
@@ -501,6 +568,76 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
   <!-- footer -->
   <?php include "./inc/footer.php"; ?>
+  <script>
+    function fillPassengerData() {
+      var select = document.querySelector('[name="passengers"]');
+      var selectedOption = select.options[select.selectedIndex];
+      
+      // Get data attributes from the selected option
+      var passengerId = selectedOption.getAttribute('data-passengerId');
+      var firstName = selectedOption.getAttribute('data-firstname');
+      var lastName = selectedOption.getAttribute('data-lastname');
+      var passport = selectedOption.getAttribute('data-passport');
+      var nationality = selectedOption.getAttribute('data-nationality');
+      var email = selectedOption.getAttribute('data-email');
+      var contact = selectedOption.getAttribute('data-contact');
+
+      // Populate the form fields
+      document.getElementById('passengerId').value = passengerId;
+      document.getElementById('firstName').value = firstName;
+      document.getElementById('lastName').value = lastName;
+      document.getElementById('passport').value = passport;
+      document.getElementById('nationality').value = nationality;
+      document.getElementById('email').value = email;
+      document.getElementById('contact').value = contact;
+    }
+    </script>
+
+
+  <script>
+    function storeFormData() {
+      // Store form data in localStorage
+      localStorage.setItem('passengerId', document.getElementById('passengerId').value);
+      localStorage.setItem('firstName', document.getElementById('firstName').value);
+      localStorage.setItem('lastName', document.getElementById('lastName').value);
+      localStorage.setItem('nationality', document.getElementById('nationality').value);
+      localStorage.setItem('passport', document.getElementById('passport').value);
+      localStorage.setItem('email', document.getElementById('email').value);
+      localStorage.setItem('contact', document.getElementById('contact').value);
+      localStorage.setItem('adult', document.getElementById('adult').value);
+      localStorage.setItem('child', document.getElementById('child').value);
+      localStorage.setItem('class', document.getElementById('class').value);
+        // You can continue with other fields as needed
+    }
+  </script>
+
+
+  <script>
+  window.onload = function() {
+    <?php if ($loginMessage != null): ?>
+      // Show the modal again if there was a login error
+      var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+      loginModal.show();
+    <?php endif; ?>
+
+    
+    // Check if stored data exists and repopulate form fields
+    if (localStorage.getItem('firstName')) {
+        document.getElementById('passengerId').value = localStorage.getItem('passengerId');
+        document.getElementById('firstName').value = localStorage.getItem('firstName');
+        document.getElementById('lastName').value = localStorage.getItem('lastName');
+        document.getElementById('nationality').value = localStorage.getItem('nationality');
+        document.getElementById('passport').value = localStorage.getItem('passport');
+        document.getElementById('email').value = localStorage.getItem('email');
+        document.getElementById('contact').value = localStorage.getItem('contact');
+        document.getElementById('adult').value = localStorage.getItem('adult');
+        document.getElementById('child').value = localStorage.getItem('child');
+        document.getElementById('class').value = localStorage.getItem('class');
+        // Continue with other fields
+    }
+  };
+</script>
+
 
   <script>
     //countdown timer

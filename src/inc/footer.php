@@ -19,7 +19,7 @@
           <li class="payment-image">
             <img src="<?php echo ROOT_URL; ?>../public/images/visa.png">
           </li>
-          <li class="payment-image">
+          <!-- <li class="payment-image">
             <img src="<?php echo ROOT_URL; ?>../public/images/bkash.png">
           </li>
           <li class="payment-image">
@@ -42,7 +42,7 @@
           </li>
           <li class="payment-image">
             <img src="<?php echo ROOT_URL; ?>../public/images/visa.png">
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="col-lg-3 text-start">
