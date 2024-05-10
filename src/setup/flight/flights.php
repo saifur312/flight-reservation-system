@@ -57,6 +57,7 @@ $flights = $flight->fetchFlights();
       htmlspecialchars($row['destination']),
       htmlspecialchars(date('Y-m-d h:i A', strtotime($row['departure']))),
       htmlspecialchars(date('Y-m-d h:i A', strtotime($row['arrival']))),
+      htmlspecialchars($row['class']),
       htmlspecialchars($row['price']),
       htmlspecialchars($row['airline']),
       $editLink . ' ' . $deleteLink  // Concatenate Edit and Delete links
@@ -79,7 +80,7 @@ $flights = $flight->fetchFlights();
     var rowData = <?php echo json_encode($rows); ?>;
 
     new gridjs.Grid({
-      columns: ["ID", "From", "To", "Departure", "Arrival", "Price", "Airline",
+      columns: ["ID", "From", "To", "Departure", "Arrival", "Class", "Price", "Airline", 
         {
           name: "Actions",
           formatter: (cell) => gridjs.html(cell) // Parse HTML content for combined actions

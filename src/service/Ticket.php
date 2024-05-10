@@ -34,6 +34,10 @@ class Ticket
     $class = $formData['class'];
     //$seatNo = $formData['seatNo'];
     $amount = $formData['amount'];
+    
+    if($amount==''){
+      $amount=0;
+    }
 
     // $insertQuery = "INSERT into ticket(flight_id, user_id, adult, child, class, seat_no, amount, created_on) values ('$flightId', '$userId', '$adult', '$child', '$class', '', '$amount', NOW())";
 

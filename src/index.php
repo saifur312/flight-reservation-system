@@ -107,7 +107,6 @@ $showflights = false;
                   </div>
                   <div class="col-lg-12 text-start">
                     <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="class" required>
-                      <option>First Class</option>
                       <option>Economy</option>
                       <option>Business</option>
                     </select>
@@ -332,10 +331,11 @@ $showflights = false;
         var destination = encodeURIComponent($("[name='destination']").val());
         var departure = encodeURIComponent($("[name='departure']").val());
         var arrival = encodeURIComponent($("[name='arrival']").val());
+        var flightClass = encodeURIComponent($("[name='class']").val());
 
         // Construct the URL with query parameters
         var url = 'search-flights.php?source=' + source + '&destination=' + destination +
-          '&departure=' + departure + '&arrival=' + arrival;
+          '&departure=' + departure + '&arrival=' + arrival + '&class=' + flightClass;
 
         // Redirect to the constructed URL
         window.location.href = url;

@@ -16,7 +16,9 @@ include_once "./service/Passenger.php";
 $user = new User();
 $passenger = new Passenger();
 
-$savedPassengers = $passenger->fetchPassengers();
+// $savedPassengers = $passenger->fetchPassengers();
+if($userId)
+  $savedPassengers = $passenger->fetchPassengerByUserId($userId);
 
 
 // if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
@@ -309,8 +311,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
               <div class="accordion-body">
 
                 <div class="row col-lg-12 text-start mt-2 mb-4">
-                  <div class="col-4 text-start">
-                    <label for="source" class="col-form-label">Select from saved Passengers </label>
+                  <div class="col-6 text-start">
+                    <label for="source" class="col-form-label">You can select from your previous passengers </label>
                   </div>
                   <div class="col-6 text-start">
                     <select class="form-select form-select-lg mb-3 select2" aria-label=".form-select-lg" name="passengers" onchange="fillPassengerData()" required>
@@ -346,10 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
                     <input type="hidden" class="form-control" id="userId" name="userId" value="<?php echo $userId ?>" required>
                     <input type="hidden" class="form-control" id="flightId" name="flightId" value="<?php echo $flight['id'] ?>" required>
                     <input type="hidden" class="form-control" id="passengerId" name="passengerId" required>
-                    <div class="col-md-12" >
-                      <label for="firstName" class="form-label">First Name</label>
-                      <input type="text" class="form-control" id="firstName" name="firstName" required>
-                    </div>
+                    
                     <div class="col-md-6">
                       <label for="firstName" class="form-label">First Name</label>
                       <input type="text" class="form-control" id="firstName" name="firstName" required>
@@ -374,20 +373,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
                       <label for="contact" class="form-label">Contact No</label>
                       <input type="text" class="form-control" id="contact" name="contact" required>
                     </div>
-
+                    
                     <div class="col-md-12">
                       <div class="row justify-content-center mt-2">
                         <div class="col-1 text-start">
                           <label for="adult" class="col-form-label-sm">Adult(s)</label>
                         </div>
                         <div class="col-2 text-start">
-                          <input type="number" min="1" name="adult" class="form-control form-control-sm" value="1">
+                          <!-- <input type="number" min="1" name="adult" class="form-control form-control-sm" value="1"> -->
+                          <input type="number" min="1" name="adult" id="adult" class="form-control form-control-sm" value="1" data-price="<?php echo $flight['price'] ?>" onchange="updateAmount()">
+
                         </div>
                         <div class="col-1 text-start">
                           <label for="child" class="col-form-label-sm">Child(s)</label>
                         </div>
                         <div class="col-2 text-start">
-                          <input type="number" name="child" class="form-control form-control-sm" value="0">
+                          <!-- <input type="number" name="child" class="form-control form-control-sm" value="0"> -->
+                          <input type="number" name="child" id="child" class="form-control form-control-sm" value="0" data-price="<?php echo $flight['price'] ?>
+                          " onchange="updateAmount()">
                         </div>
                         <div class="col-1 text-start">
                           <label for="class" class="col-form-label-sm">Class</label>
@@ -403,7 +406,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
                           <label for="amount" class="col-form-label-sm"> Amount</label>
                         </div>
                         <div class="col-2 text-start">
-                          <input type="number" name="amount" class="form-control form-control-sm" readonly>
+                          <input type="number" id="amount" name="amount" class="form-control form-control-sm" value="<?php echo $flight['price'] ?>" readonly>
                         </div>
                       </div>
                     </div>
@@ -482,17 +485,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
                         <th> Tax</th>
                       </tr>
                       <tr>
-                        <td> Adult X 1 </td>
+                        <td> Adult X <span id="adultNumber"> 1 </span> </td>
                         <td>
                           <?php
                           echo $flight['price'];
                           ?>
                         </td>
                         <td>
+                            <p id="adultTax"> 
+                              <?php echo $flight['price'] * 0.1; ?>
+                            </p>
+                          <!-- /** 10% tax */ -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> Child X <span id="childNumber"> 0  </span> </td>
+                        <td id="childFare">
+                          
                           <?php
-                          echo $flight['price'] * 0.1;
-                          /** 10% tax */
+                          echo $flight['price'] * .5; //50% of base price
                           ?>
+                        </td>
+                        <td>
+                            <p id="childTax"> 0 </p>
+                          <!-- /** 10% tax */ -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> Total </td>
+                        <td> </td>
+                        <td>
+                            <p id="totalAmount">
+                              <?php echo $flight['price'] + $flight['price'] * 0.1; ?>
+                            </p>
+                          <!-- /** 10% tax */ -->
                         </td>
                       </tr>
                     </table>
@@ -568,6 +594,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
 
   <!-- footer -->
   <?php include "./inc/footer.php"; ?>
+
+  <script>
+    function updateAmount() {
+        // Prices per adult and child - adjust these as necessary
+        const pricePerAdult = parseFloat(document.getElementById('adult').getAttribute('data-price'));
+        const pricePerChild = parseFloat(document.getElementById('child').getAttribute('data-price'));
+
+        // Current number of adults and children
+        const numAdults = parseInt(document.getElementById('adult').value);
+        const numChildren = parseInt(document.getElementById('child').value);
+
+        // Calculate the total amount
+        totalAdultPrice = numAdults * pricePerAdult;
+        totalAdultTax = numAdults * pricePerAdult * .1;
+        totalChildPrice = numChildren * pricePerAdult * 0.5;
+        const totalAmount = totalAdultPrice + totalAdultTax + totalChildPrice;
+
+        console.log(totalAmount);
+        // Update the amount field
+        document.getElementById('amount').value = totalAmount.toFixed(2);
+
+        document.getElementById('adultNumber').innerHTML = numAdults;
+        document.getElementById('adultTax').innerHTML = numAdults * pricePerAdult * 0.1; // 10% vat
+
+        document.getElementById('childNumber').innerHTML = numChildren;
+        document.getElementById('childFare').innerHTML = numChildren * pricePerAdult * 0.5;
+
+        document.getElementById('totalAmount').innerHTML = totalAmount;
+        
+        // document.getElementById('childTax').innerHTML = (numChildren * pricePerAdult * 0.5) * 0.1; // 10% vat
+
+        //console.log("Adult " + numAdults +" price " + pricePerAdult + " Total " + numAdults  * pricePerAdult * 0.1);
+
+    }
+</script>
+
+
   <script>
     function fillPassengerData() {
       var select = document.querySelector('[name="passengers"]');
@@ -656,6 +719,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirmBooking'])) {
       }
     }, 1000); // Run the function every 1 second
   </script>
+
+
+
 </body>
 
 

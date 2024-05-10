@@ -25,6 +25,8 @@ if (isset($_GET['source'])) {
   $dst = $_GET['destination'];
   $dep = $_GET['departure'];
   $arv = $_GET['arrival'];
+  $class = $_GET['class'];
+  //echo 'Class url ' . $class;
   $fastest = false;
   if (isset($_GET['fastest'])) {
     //echo "Fastest " . $_GET['fastest'];
@@ -34,7 +36,7 @@ if (isset($_GET['source'])) {
 
   $filter = false;
   //echo "$src + $dst + $dep + $arv";
-  $flights = $flight->filterFlights($src, $dst, $dep, $arv, urlencode($fastest));
+  $flights = $flight->filterFlights($src, $dst, $dep, $arv, $class, urlencode($fastest));
 
   if ($flights) {
     $showflights = true;
@@ -62,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
 
   // header('Location: search-flights.php?source=' + $_POST['source'] + '&destination=' + $_POST['destination'] + '&departure=' + $_POST['departure'] + '&arrival=' + $_POST['arrival']);
 
-  header('Location: search-flights.php?source=' . urlencode($_POST['source']) . '&destination=' . urlencode($_POST['destination']) . '&departure=' . urlencode($_POST['departure']) . '&arrival=' . urlencode($_POST['arrival']));
+  header('Location: search-flights.php?source=' . urlencode($_POST['source']) . '&destination=' . urlencode($_POST['destination']) . '&departure=' . urlencode($_POST['departure']) . '&arrival=' . urlencode($_POST['arrival']) . '&class=' . urlencode($_POST['class']));
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
@@ -74,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
     $_POST['destination'],
     $_POST['departure'],
     $_POST['arrival'],
+    $_POST['class'],
     false, //fastest
     $_POST['minPrice'],
     $_POST['maxPrice'],
@@ -268,7 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                   </div>
                   <div class="col-lg-12 text-start">
                     <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg" name="class" required>
-                      <option>First Class</option>
+                      <option >All</option>
                       <option>Economy</option>
                       <option>Business</option>
                     </select>
@@ -789,7 +792,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                                   </div>
                                 </div>
                                 <div class="col-lg-4 text-end">
-                                  <p>Economy</p>
+                                  <p>
+                                    <?php
+                                    echo $flight['class'];
+                                    ?>
+                                  </p>
                                 </div>
                               </div>
 
@@ -918,11 +925,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['filter'])) {
                                     echo $ap->getCode($flight['destination']);
                                     ?>
                                   </div>
+                                  
+                                  
                                   <div class='row text-start mt-4'>
                                     <p>Tax & Amount</p>
                                     <hr />
-                                    <p> Tax = 10% of Base Fair </p>
-                                    <p> Total Amount = Base Amount + Tax</p>
+                                    <p> Tax = 10% of Base Fair per adult </p>
+                                    <p> Child Fare = 50% of Base Fair</p>
+                                    <p> Child Tax = No tax for childs</p>
+                                    <p> Total Amount = Adult X Base Fair + Tax + Child X Child Fare</p>
                                     <p> Cancellation</p>
                                     <hr />
                                     <p> Cancellation Fee = Airline's Fee + ARS Fee

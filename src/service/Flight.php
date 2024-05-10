@@ -22,6 +22,7 @@ class Flight
     $departure = $formData['departure'];
     $arrival = $formData['arrival'];
     $airline = $formData['airline'];
+    $class = $formData['class'];
     $price = $formData['price'];
 
     // Convert to DateTime objects
@@ -39,7 +40,8 @@ class Flight
     echo "Duration in minutes: " . $minutes;
 
 
-    $insertQuery = "INSERT into flight(source, destination, departure, arrival, price, airline, duration) values ('$source', '$destination', '$departure', '$arrival', '$price', '$airline', '$minutes')";
+    $insertQuery = "INSERT into flight(source, destination, departure, arrival, class, price, airline, duration) 
+      values ('$source', '$destination', '$departure', '$arrival', '$class', '$price', '$airline', '$minutes')";
 
     $savedData = $this->db->create($insertQuery);
 
@@ -84,8 +86,10 @@ class Flight
 
 
 
-  public function filterFlights($src, $dst, $dep, $arv = null, $fastest = null, $minPrice = null, $maxPrice = null, $airlines = [])
+  public function filterFlights($src, $dst, $dep, $arv = null, $class=null, $fastest = null,
+   $minPrice = null, $maxPrice = null, $airlines = [])
   {
+    //echo 'class '. $class;
     //echo "fastest param " . $fastest;
     //echo $src, $dst, $dep, $ret;
     /** search by source, destination, departure and arrival/return */
@@ -103,6 +107,9 @@ class Flight
     // if ($arv) {
     //   $selectQuery .= " AND Date(arrival) = '$arv'";
     // }
+    if ($class) {
+      $selectQuery .= " AND class = '$class'";
+    }
     if ($minPrice) {
       $selectQuery .= " AND price >= $minPrice";
     }
@@ -126,6 +133,7 @@ class Flight
       $selectQuery .= " ORDER BY duration";
     else
       $selectQuery .= " ORDER BY price";
+    
     //echo $selectQuery;
 
     $flights = $this->db->select($selectQuery);

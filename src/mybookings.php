@@ -318,13 +318,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                                     </tr>
                                   </table>
 
-                                  <div class='row rounded-0 alert alert-primary show mt-4' role='alert'>
-                                    <div class="col-md-6 text-start"> Total (1 Traveler)</div>
+                                  <div class='row rounded-0 alert alert-primary show mt-4'>
+                                    <div class="col-md-6 text-start"> 
+                                      Total ( <span> 
+                                        <?php 
+                                        $totalTraveler = $ticket['adult'] + $ticket['child'];
+                                        echo $totalTraveler; ?>
+                                      </span> Traveler)
+                                    </div>
                                     <div class="col-md-6 text-end">
                                       <b>
                                         <?php
-                                        $tax = $flight['price'] * 0.1;
-                                        echo "BDT " . $flight['price'] + $tax;
+                                        $totalAdultPrice = $ticket['adult'] * $flight['price'];
+                                        $totalAdultTax = $totalAdultPrice * 0.1;
+                                        $totalChildPrice = $ticket['child'] * $flight['price'] * 0.5;
+                                        $totalAmount = $totalAdultPrice +  $totalAdultTax + $totalChildPrice;
+                                        echo "BDT " . $totalAmount;
                                         ?>
                                       </b>
                                     </div>
@@ -339,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                                       <th> Tax</th>
                                     </tr>
                                     <tr>
-                                      <td> Adult X 1 </td>
+                                      <td> Adult X <span> <?php echo $ticket['adult']?> </span> </td>
                                       <td>
                                         <?php
                                         echo $flight['price'];
@@ -347,20 +356,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                                       </td>
                                       <td>
                                         <?php
-                                        echo $flight['price'] * 0.1;
+                                        echo $ticket['adult'] * $flight['price'] * 0.1;
                                         /** 10% tax */
                                         ?>
                                       </td>
                                     </tr>
+                                    <tr>
+                                      <td> Child X <span> <?php echo $ticket['child']?> </span> </td>
+                                      <td>
+                                        <?php
+                                        echo $flight['price'] * 0.5;
+                                        ?>
+                                      </td>
+                                      <td> 0 </td>
+                                    </tr>
                                   </table>
 
                                   <div class='row rounded-0 alert alert-primary show mt-4'>
-                                    <div class="col-md-6 text-start"> Total (1 Traveler)</div>
+                                    <div class="col-md-6 text-start"> 
+                                      Total ( <span> 
+                                        <?php echo $totalTraveler?>
+                                      </span> Traveler)
+                                    </div>
                                     <div class="col-md-6 text-end">
                                       <b>
                                         <?php
-                                        $tax = $flight['price'] * 0.1;
-                                        echo "BDT " . $flight['price'] + $tax;
+                                          echo "BDT " . $totalAmount;
                                         ?>
                                       </b>
                                     </div>
@@ -374,11 +395,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                                     echo $ap->getCode($flight['destination']);
                                     ?>
                                   </div>
+                                  
                                   <div class='row text-start mt-4'>
                                     <p>Tax & Amount</p>
                                     <hr />
-                                    <p> Tax = 10% of Base Fair </p>
-                                    <p> Total Amount = Base Amount + Tax</p>
+                                    <p> Tax = 10% of Base Fair per adult </p>
+                                    <p> Child Fare = 50% of Base Fair</p>
+                                    <p> Child Tax = No tax for childs</p>
+                                    <p> Total Amount = Adult X Base Fair + Tax + Child X Child Fare</p>
                                     <p> Cancellation</p>
                                     <hr />
                                     <p> Cancellation Fee = Airline's Fee + ARS Fee
@@ -386,12 +410,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelBooking'])) {
                                   </div>
 
                                   <div class='row rounded-0 alert alert-primary show mt-4'>
-                                    <div class="col-md-6 text-start"> Total (1 Traveler)</div>
+                                    <div class="col-md-6 text-start"> 
+                                      Total ( <span> 
+                                        <?php echo $totalTraveler ?>
+                                      </span> Traveler)
+                                    </div>
                                     <div class="col-md-6 text-end">
                                       <b>
                                         <?php
-                                        $tax = $flight['price'] * 0.1;
-                                        echo "BDT " . $flight['price'] + $tax;
+                                        echo "BDT " . $totalAmount;
                                         ?>
                                       </b>
                                     </div>

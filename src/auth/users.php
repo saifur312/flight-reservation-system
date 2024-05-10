@@ -128,9 +128,10 @@ $data = $db->select($query);
       htmlspecialchars($row['id']),
       htmlspecialchars($row['username']),
       htmlspecialchars($row['password']),
+      htmlspecialchars($row['email']),
       // htmlspecialchars($row['role']),
       "<a href='update.php?id=" . urlencode($row['id']) . "'> <i class='bi bi-pen-fill' style='color:orange'></i></a>",
-      "<a href='delete.php?id=" . urlencode($row['id']) . "'><i class='bi bi-trash3-fill' style='color:red'></i></a>"
+      "<a href='update.php?id=" . urlencode($row['id']) . "'><i class='bi bi-trash3-fill' style='color:red'></i></a>"
     ];
   }
 
@@ -150,7 +151,7 @@ $data = $db->select($query);
 
     new gridjs.Grid({
       // columns: ["ID", "Username", "Password", "Role", "Edit", "Delete"],
-      columns: ["ID", "Username", "Password",
+      columns: ["ID", "Username", "Password", "Email",
         {
           name: "Edit",
           formatter: (cell) => gridjs.html(cell) // Use the html formatter to parse HTML content

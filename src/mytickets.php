@@ -261,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelTicket'])) {
                               </div>
                             </div>
                             <!-- Baggage, Fare, Policy -->
-                            <div class="col-lg-6">
+                            <!-- <div class="col-lg-6">
                               <ul class="nav nav-pills mb-3" id="pills-tab<?php echo $count ?>" role="tablist">
                                 <li class="nav-item" role="presentation">
                                   <button class="nav-link active" id="pills-baggage-tab<?php echo $count ?>" data-bs-toggle="pill" data-bs-target="#pills-baggage<?php echo $count ?>" type="button" role="tab" aria-controls="pills-baggage<?php echo $count ?>" aria-selected="true">Baggage</button>
@@ -370,6 +370,151 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancelTicket'])) {
                                         <?php
                                         $tax = $flight['price'] * 0.1;
                                         echo "BDT " . $flight['price'] + $tax;
+                                        ?>
+                                      </b>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div> -->
+                            
+                            <!-- Baggage, Fare, Policy -->
+                            <div class="col-lg-6">
+                              <ul class="nav nav-pills mb-3" id="pills-tab<?php echo $count ?>" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link active" id="pills-baggage-tab<?php echo $count ?>" data-bs-toggle="pill" data-bs-target="#pills-baggage<?php echo $count ?>" type="button" role="tab" aria-controls="pills-baggage<?php echo $count ?>" aria-selected="true">Baggage</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="pills-fare-tab<?php echo $count ?>" data-bs-toggle="pill" data-bs-target="#pills-fare<?php echo $count ?>" type="button" role="tab" aria-controls="pills-fare<?php echo $count ?>" aria-selected="false">Fare</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                  <button class="nav-link" id="pills-policy-tab<?php echo $count ?>" data-bs-toggle="pill" data-bs-target="#pills-policy<?php echo $count ?>" type="button" role="tab" aria-controls="pills-policy<?php echo $count ?>" aria-selected="false">Policy</button>
+                                </li>
+                              </ul>
+                              <div class="tab-content" id="pills-tabContent<?php echo $count ?>">
+                                <div class="tab-pane fade show active" id="pills-baggage<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-baggage-tab<?php echo $count ?>" tabindex="0">
+                                  <table class="col-lg-12 table table-borderless">
+                                    <tr>
+                                      <th> Flight</th>
+                                      <th> Cabin</th>
+                                      <th> Check-in</th>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <p>
+                                          <?php
+                                          echo $ap->getCode($flight['source']);
+                                          echo " - ";
+                                          echo $ap->getCode($flight['destination']);
+                                          ?>
+                                        </p>
+                                      </td>
+                                      <td> 7 kg</td>
+                                      <td> 20 kg</td>
+                                    </tr>
+                                  </table>
+
+                                  <div class='row rounded-0 alert alert-primary show mt-4'>
+                                    <div class="col-md-6 text-start"> 
+                                      Total ( <span> 
+                                        <?php 
+                                        $totalTraveler = $ticket['adult'] + $ticket['child'];
+                                        echo $totalTraveler; ?>
+                                      </span> Traveler)
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                      <b>
+                                        <?php
+                                        $totalAdultPrice = $ticket['adult'] * $flight['price'];
+                                        $totalAdultTax = $totalAdultPrice * 0.1;
+                                        $totalChildPrice = $ticket['child'] * $flight['price'] * 0.5;
+                                        $totalAmount = $totalAdultPrice +  $totalAdultTax + $totalChildPrice;
+                                        echo "BDT " . $totalAmount;
+                                        ?>
+                                      </b>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-fare<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-fare-tab<?php echo $count ?>" tabindex="0">
+
+                                  <table class="col-lg-12 table table-borderless">
+                                    <tr>
+                                      <th> Fare Summary</th>
+                                      <th> Base Fare</th>
+                                      <th> Tax</th>
+                                    </tr>
+                                    <tr>
+                                      <td> Adult X <span> <?php echo $ticket['adult']?> </span> </td>
+                                      <td>
+                                        <?php
+                                        echo $flight['price'];
+                                        ?>
+                                      </td>
+                                      <td>
+                                        <?php
+                                        echo $ticket['adult'] * $flight['price'] * 0.1;
+                                        /** 10% tax */
+                                        ?>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td> Child X <span> <?php echo $ticket['child']?> </span> </td>
+                                      <td>
+                                        <?php
+                                        echo $flight['price'] * 0.5;
+                                        ?>
+                                      </td>
+                                      <td> 0 </td>
+                                    </tr>
+                                  </table>
+
+                                  <div class='row rounded-0 alert alert-primary show mt-4'>
+                                    <div class="col-md-6 text-start"> 
+                                      Total ( <span> 
+                                        <?php echo $totalTraveler?>
+                                      </span> Traveler)
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                      <b>
+                                        <?php
+                                          echo "BDT " . $totalAmount;
+                                        ?>
+                                      </b>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-policy<?php echo $count ?>" role="tabpanel" aria-labelledby="pills-policy-tab<?php echo $count ?>" tabindex="0">
+                                  <div class="d-block p-2 bg-info text-white">
+                                    <?php
+                                    echo $ap->getCode($flight['source']);
+                                    echo " - ";
+                                    echo $ap->getCode($flight['destination']);
+                                    ?>
+                                  </div>
+                                  <div class='row text-start mt-4'>
+                                    <p>Tax & Amount</p>
+                                    <hr />
+                                    <p> Tax = 10% of Base Fair per adult </p>
+                                    <p> Child Fare = 50% of Base Fair</p>
+                                    <p> Child Tax = No tax for childs</p>
+                                    <p> Total Amount = Adult X Base Fair + Tax + Child X Child Fare</p>
+                                    <p> Cancellation</p>
+                                    <hr />
+                                    <p> Cancellation Fee = Airline's Fee + ARS Fee
+                                      Refund Amount = Paid Amount - Cancellation Fee</p>
+                                  </div>
+
+                                  <div class='row rounded-0 alert alert-primary show mt-4'>
+                                    <div class="col-md-6 text-start"> 
+                                      Total ( <span> 
+                                        <?php echo $totalTraveler ?>
+                                      </span> Traveler)
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                      <b>
+                                        <?php
+                                        echo "BDT " . $totalAmount;
                                         ?>
                                       </b>
                                     </div>
