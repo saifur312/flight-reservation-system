@@ -37,7 +37,7 @@ class Flight
     $minutes += $interval->h * 60;        // Hours converted to minutes
     $minutes += $interval->i;             // Minutes
 
-    echo "Duration in minutes: " . $minutes;
+    //echo "Duration in minutes: " . $minutes;
 
 
     $insertQuery = "INSERT into flight(source, destination, departure, arrival, class, price, airline, duration) 

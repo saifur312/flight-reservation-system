@@ -88,7 +88,8 @@ $showflights = false;
                     <label for="departure" class="col-form-label">Departure</label>
                   </div>
                   <div class="col-lg-12 text-start">
-                    <input type="date" name="departure" class="form-control-lg" min="2024-03-29" max="2024-04-29">
+                    <!-- <input type="date" name="departure" class="form-control-lg" min="2024-03-29" max="2024-04-29"> -->
+                    <input type="date" name="departure" class="form-control-lg" >
                   </div>
                 </div>
 
@@ -97,7 +98,7 @@ $showflights = false;
                     <label for="arrival" class="col-form-label">Return</label>
                   </div>
                   <div class="col-lg-12 text-start">
-                    <input type="date" name="arrival" class="form-control-lg" min="2024-03-29" max="2024-04-29">
+                    <input type="date" name="arrival" class="form-control-lg">
                   </div>
                 </div>
 

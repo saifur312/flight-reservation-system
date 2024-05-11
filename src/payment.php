@@ -75,7 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
           <div class="accordion-item">
             <h2 class="accordion-header" id="flush-FlightReview">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFlightReview" aria-expanded="true" aria-controls="flush-collapseFlightReview">
-                DAC-COX
+                <?php
+                  echo $ap->getCode($flight['source']);
+                  echo " - ";
+                  echo $ap->getCode($flight['destination']);
+                ?>
               </button>
             </h2>
             <div id="flush-collapseFlightReview" class="accordion-collapse collapse show" aria-labelledby="flush-FlightReview" data-bs-parent="#accordionFlightReview">
@@ -345,6 +349,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
                     </div>
                   </div> -->
                 </div>
+                
+                <div class="row justify-content-center mt-4">
+                  <div class="col-lg-6"> 
+                    <h4> Fare Details</h4>
+                    <table class="col-lg-6 table">
+                      <tr>
+                        <th> Passengers</th>
+                        <th> Fare</th>
+                        <th> Tax</th>
+                      </tr>
+                      <tr>
+                        <td> Adult X <span> <?php echo $ticket['adult']?> </span> </td>
+                        <td>
+                          <?php
+                          echo $flight['price'] . " X " . $ticket['adult'];
+                          ?>
+                        </td>
+                        <td>
+                          <?php
+                          echo $ticket['adult'] * $flight['price'] * 0.1;
+                          /** 10% tax */
+                          ?>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td> Child X <span> <?php echo $ticket['child']?> </span> </td>
+                        <td>
+                          <?php
+                          echo $flight['price'] * 0.5 . " X " . $ticket['child'];
+                          ?>
+                        </td>
+                        <td> 0 </td>
+                      </tr>
+
+                      <?php
+                        $totalAdultPrice = $ticket['adult'] * $flight['price'];
+                        $totalAdultTax = $totalAdultPrice * 0.1;
+                        $totalChildPrice = $ticket['child'] * $flight['price'] * 0.5;
+                        $totalAmount = $totalAdultPrice +  $totalAdultTax + $totalChildPrice;
+                        
+                      ?>
+
+                      <tr >
+                        <td> Total <span> <?php echo $ticket['adult'] + $ticket['child']?> </span> </td>
+                        <td>
+                          <?php
+                          echo $totalAdultPrice + $totalChildPrice;
+                          ?>
+                        </td>
+                        <td> 
+                          <?php
+                          echo $totalAdultTax;
+                          ?>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td colspan="3" > 
+                          <h5>
+                            You will pay 
+                            <b>
+                              <?php
+                              echo $totalAmount;
+                              ?>
+                            </b>
+                          </h5>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -354,22 +429,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
         <div class="row col-lg-12 text-center mt-4">
           <h4> Select a Payment method</h4>
           <div class="col-lg-3">
-            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#bkashModal">
               <img src="<?php echo ROOT_URL; ?>../public/images/bkash.png">
             </button>
           </div>
           <div class="col-lg-3">
-            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#nagadModal">
               <img src="<?php echo ROOT_URL; ?>../public/images/nagad.png">
             </button>
           </div>
           <div class="col-lg-3">
-            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#rocketModal">
               <img src="<?php echo ROOT_URL; ?>../public/images/rocket.png">
             </button>
           </div>
           <div class="col-lg-3">
-            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#visaModal">
               <img src="<?php echo ROOT_URL; ?>../public/images/visa.png">
             </button>
           </div>
@@ -382,6 +457,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
 
       </div>
 
+      <!-- Timer Counter & Help -->
       <div class="col-lg-3">
         <div class="col-lg-12" style="background-color: #ffffff; padding: 12px;">
           <div id="timer" class="text-start" style="background-color: #ECF3FE; padding-left: 16px;">
@@ -393,6 +469,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
           </div>
         </div>
 
+        <!-- Help  -->
         <div class="card mt-4 ">
           <div class="card-header text-start" style="background-color: #0E70A4; color: #ffffff;">
             <h6> Need Help ?</h6>
@@ -425,12 +502,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
     </div>
   </div>
 
-  <!-- payment Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- bkash payment Modal -->
+  <div class="modal fade" id="bkashModal" tabindex="-1" aria-labelledby="bkashModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
+          <h5 class="modal-title" id="bkashModalLabel">
             <img src="<?php echo ROOT_URL; ?>../public/images/bkash.png" width="100px" height="80px">
           </h5>
           <h4> Pay with bKash</h4>
@@ -452,6 +529,166 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['payment'])) {
             </div>
             <div class="col-md-6">
               <label for="bkashNumber" class="form-label">Bkash Number</label>
+              <input type="number" class="form-control" id="accountNo" name="accountNo">
+            </div>
+            <div class="col-md-6">
+              <label for="contact" class="form-label">Contact No</label>
+              <input type="text" class="form-control" id="contact" name="contact">
+            </div>
+            <div class="col-md-6">
+              <label for="code" class="form-label">Verification Code</label>
+              <input type="number" class="form-control" id="code" name="code">
+            </div>
+            <div class="col-md-6">
+              <label for="pin" class="form-label">PIN</label>
+              <input type="number" class="form-control" id="pin" name="pin">
+            </div>
+            <div class="col-12">
+              <input type="submit" class="btn btn-lg btn-warning" name="payment" value="Pay" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- nagad payment Modal -->
+  <div class="modal fade" id="nagadModal" tabindex="-1" aria-labelledby="nagadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="nagadModalLabel">
+            <img src="<?php echo ROOT_URL; ?>../public/images/nagad.png" width="100px" height="80px">
+          </h5>
+          <h4> Pay with nagad</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="post" class="row g-3">
+            <input type="hidden" class="form-control" id="ticketId" name="ticketId" value="<?php echo $ticket['id']; ?>">
+            <input type="hidden" class="form-control" id="method" name="method" value="bKash">
+            <div class="row col-md-12">
+              <label class="col-md-3 form-label">Ticket No:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['id']; ?></label>
+              <label class="col-md-3 form-label">Flight No:</label>
+              <label class="col-md-3 form-label"><?php echo $flight['id']; ?></label>
+              <label class="col-md-3 form-label">You Pay:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['amount']; ?></label>
+              <label class="col-md-3 form-label">Name:</label>
+              <label class="col-md-3 form-label"><?php echo $username; ?></label>
+            </div>
+            <div class="col-md-6">
+              <label for="bkashNumber" class="form-label">Nagad Number</label>
+              <input type="number" class="form-control" id="accountNo" name="accountNo">
+            </div>
+            <div class="col-md-6">
+              <label for="contact" class="form-label">Contact No</label>
+              <input type="text" class="form-control" id="contact" name="contact">
+            </div>
+            <div class="col-md-6">
+              <label for="code" class="form-label">Verification Code</label>
+              <input type="number" class="form-control" id="code" name="code">
+            </div>
+            <div class="col-md-6">
+              <label for="pin" class="form-label">PIN</label>
+              <input type="number" class="form-control" id="pin" name="pin">
+            </div>
+            <div class="col-12">
+              <input type="submit" class="btn btn-lg btn-warning" name="payment" value="Pay" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rocket payment Modal -->
+  <div class="modal fade" id="rocketModal" tabindex="-1" aria-labelledby="rocketModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rocketModalLabel">
+            <img src="<?php echo ROOT_URL; ?>../public/images/rocket.png" width="100px" height="80px">
+          </h5>
+          <h4> Pay with Rocket</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="post" class="row g-3">
+            <input type="hidden" class="form-control" id="ticketId" name="ticketId" value="<?php echo $ticket['id']; ?>">
+            <input type="hidden" class="form-control" id="method" name="method" value="bKash">
+            <div class="row col-md-12">
+              <label class="col-md-3 form-label">Ticket No:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['id']; ?></label>
+              <label class="col-md-3 form-label">Flight No:</label>
+              <label class="col-md-3 form-label"><?php echo $flight['id']; ?></label>
+              <label class="col-md-3 form-label">You Pay:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['amount']; ?></label>
+              <label class="col-md-3 form-label">Name:</label>
+              <label class="col-md-3 form-label"><?php echo $username; ?></label>
+            </div>
+            <div class="col-md-6">
+              <label for="bkashNumber" class="form-label">Rocket Number</label>
+              <input type="number" class="form-control" id="accountNo" name="accountNo">
+            </div>
+            <div class="col-md-6">
+              <label for="contact" class="form-label">Contact No</label>
+              <input type="text" class="form-control" id="contact" name="contact">
+            </div>
+            <div class="col-md-6">
+              <label for="code" class="form-label">Verification Code</label>
+              <input type="number" class="form-control" id="code" name="code">
+            </div>
+            <div class="col-md-6">
+              <label for="pin" class="form-label">PIN</label>
+              <input type="number" class="form-control" id="pin" name="pin">
+            </div>
+            <div class="col-12">
+              <input type="submit" class="btn btn-lg btn-warning" name="payment" value="Pay" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rocket payment Modal -->
+  <div class="modal fade" id="visaModal" tabindex="-1" aria-labelledby="visaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="visaModalLabel">
+            <img src="<?php echo ROOT_URL; ?>../public/images/visa.png" width="100px" height="80px">
+          </h5>
+          <h4> Pay with Visa Card</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="" method="post" class="row g-3">
+            <input type="hidden" class="form-control" id="ticketId" name="ticketId" value="<?php echo $ticket['id']; ?>">
+            <input type="hidden" class="form-control" id="method" name="method" value="bKash">
+            <div class="row col-md-12">
+              <label class="col-md-3 form-label">Ticket No:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['id']; ?></label>
+              <label class="col-md-3 form-label">Flight No:</label>
+              <label class="col-md-3 form-label"><?php echo $flight['id']; ?></label>
+              <label class="col-md-3 form-label">You Pay:</label>
+              <label class="col-md-3 form-label"><?php echo $ticket['amount']; ?></label>
+              <label class="col-md-3 form-label">Name:</label>
+              <label class="col-md-3 form-label"><?php echo $username; ?></label>
+            </div>
+            <div class="col-md-6">
+              <label for="bkashNumber" class="form-label">Card Number</label>
               <input type="number" class="form-control" id="accountNo" name="accountNo">
             </div>
             <div class="col-md-6">
